@@ -183,6 +183,10 @@ final class PrimitiveSupport {
 		return new BoxedLongCollection(original);
 	}
 
+	static Set<Long> boxed(LongSet original) {
+		return new BoxedLongSet(original);
+	}
+
 	static Collection<Byte> boxed(ByteCollection original) {
 		return new BoxedByteCollection(original);
 	}
@@ -222,6 +226,21 @@ final class PrimitiveSupport {
 	 * @return 指定した値が初めて出現するインデックス
 	 */
 	static int linearSearchFirst(int [] array, int target) {
+		for (int i = 0; i < array.length; i++) {
+			if(array[i] == target) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * 指定された配列中に指定した値が初めて出現するインデックスを返す．出現しなければ-1.
+	 * @param array
+	 * @param target
+	 * @return 指定した値が初めて出現するインデックス
+	 */
+	static int linearSearchFirst(long[] array, long target) {
 		for (int i = 0; i < array.length; i++) {
 			if(array[i] == target) {
 				return i;
@@ -1055,6 +1074,105 @@ final class PrimitiveSupport {
 		@Override
 		public boolean removeAll(Collection<?> c) {
 			return c.stream().map(i -> remove(i)).reduce(false, (l, r) -> l | r);
+		}
+
+		@Override
+		public boolean retainAll(Collection<?> c) {
+			boolean modified = false;
+			Iterator<Long> i = iterator();
+			for (; i.hasNext();) {
+				if (!c.contains(i.next())) {
+					i.remove();
+					modified = true;
+				}
+			}
+			return modified;
+		}
+
+		@Override
+		public void clear() {
+			original.clear();
+		}
+
+		@Override
+		public Spliterator<Long> spliterator() {
+			return original.spliterator();
+		}
+	}
+
+	private static class BoxedLongSet implements Set<Long> {
+		private final LongSet original;
+
+		BoxedLongSet(LongSet original) {
+			this.original = original;
+		}
+
+		@Override
+		public int size() {
+			return original.size();
+		}
+
+		@Override
+		public boolean isEmpty() {
+			return original.isEmpty();
+		}
+
+		@Override
+		public boolean contains(Object o) {
+			if (o != null && o instanceof Long) {
+				return original.contains((long) o);
+			}
+			return false;
+		}
+
+		@Override
+		public Iterator<Long> iterator() {
+			return original.iterator();
+		}
+
+		@Override
+		public Object[] toArray() {
+			return boxed(original.toArray());
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public <T> T[] toArray(T[] a) {
+			Object[] array = (Object[]) Array.newInstance(a.getClass().getComponentType(), size());
+
+			Iterator<Long> j = iterator();
+			for (int i = 0; i < array.length; i++) {
+				array[i] = Long.valueOf(j.next());
+			}
+			return (T[]) array;
+		}
+
+		@Override
+		public boolean add(Long e) {
+			return original.add(e);
+		}
+
+		@Override
+		public boolean remove(Object o) {
+			if (o instanceof Integer) {
+				return original.remove((Integer) o);
+			}
+			return false;
+		}
+
+		@Override
+		public boolean containsAll(Collection<?> c) {
+			return c.stream().allMatch(e -> contains(e));
+		}
+
+		@Override
+		public boolean addAll(Collection<? extends Long> c) {
+			return c.stream().map(l -> add(l)).reduce(false, (l, r) -> l | r);
+		}
+
+		@Override
+		public boolean removeAll(Collection<?> c) {
+			return c.stream().map(l -> remove(l)).reduce(false, (l, r) -> l | r);
 		}
 
 		@Override

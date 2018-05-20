@@ -1,7 +1,7 @@
 /**
  * プリミティブを扱うコレクションが含まれる.
  *
- * 今のところint, byte, char用のみ．必要ができたら作る
+ * 今のところint, long, byte, char用のみ．必要ができたら作る
  *
  * 主なコンセプト
  *
@@ -29,6 +29,8 @@
  * - PrimitiveMap
  *   - IntIntMap
  *     - ScatterIntIntMap
+ *   - LongIntMap
+ *     - ScatterLongIntMap
  */
 package com.lethe_river.util.primitive;
 

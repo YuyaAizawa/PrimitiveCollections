@@ -2,12 +2,17 @@ package com.lethe_river.util.primitive;
 
 import java.util.Objects;
 import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
 
 public final class EmptyCollection {
 	private EmptyCollection() {}
 
 	public static IntCollection ofInt() {
 		return EmptyIntCollection.SINGLETON;
+	}
+
+	public static LongCollection ofLong() {
+		return EmptyLongCollection.SINGLETON;
 	}
 
 	public static ByteCollection ofByte() {
@@ -42,6 +47,31 @@ public final class EmptyCollection {
 		@Override
 		public java.util.PrimitiveIterator.OfInt iterator() {
 			return EmptyIterator.ofInt();
+		}
+	}
+
+	private static final class EmptyLongCollection extends AbstractLongCollection {
+
+		static final EmptyLongCollection SINGLETON = new EmptyLongCollection();
+		private EmptyLongCollection() {}
+
+		@Override
+		public void forEach(LongConsumer action) {
+			Objects.requireNonNull(action);
+		}
+
+		@Override
+		public int size() {
+			return 0;
+		}
+
+		private Object readResolve() {
+			return SINGLETON;
+		}
+
+		@Override
+		public java.util.PrimitiveIterator.OfLong iterator() {
+			return EmptyIterator.ofLong();
 		}
 	}
 
