@@ -51,10 +51,9 @@ final class PrimitiveSupport {
 	 * @throw NullPointerException 配列がnullだったとき
 	 * @throw ArrayIndexOutOfBoundsException offsetまたはlengthが不正だったとき
 	 */
-
-	static void checkBounds(byte[] array, int offset, int length) {
+	static void checkBounds(int[] array, int offset, int length) {
 		if ((offset | length | (array.length - (length + offset)) | (offset + length)) < 0) {
-			throw new IndexOutOfBoundsException(String.format(
+			throw new ArrayIndexOutOfBoundsException(String.format(
 					"array length: %d, offset: %d, length: %d",array.length, offset, length));
 		}
 	}
@@ -68,9 +67,26 @@ final class PrimitiveSupport {
 	 * @throw NullPointerException 配列がnullだったとき
 	 * @throw ArrayIndexOutOfBoundsException offsetまたはlengthが不正だったとき
 	 */
-	static void checkBounds(int[] array, int offset, int length) {
+	static void checkBounds(long[] array, int offset, int length) {
 		if ((offset | length | (array.length - (length + offset)) | (offset + length)) < 0) {
-			throw new IndexOutOfBoundsException(String.format(
+			throw new ArrayIndexOutOfBoundsException(String.format(
+					"array length: %d, offset: %d, length: %d",array.length, offset, length));
+		}
+	}
+
+	/**
+	 * 指定した配列に対してoffset及びlengthが妥当か検証する
+	 * @param array 検証する配列
+	 * @param offset 開始インデックス
+	 * @param length 開始からの長さ
+	 *
+	 * @throw NullPointerException 配列がnullだったとき
+	 * @throw ArrayIndexOutOfBoundsException offsetまたはlengthが不正だったとき
+	 */
+
+	static void checkBounds(byte[] array, int offset, int length) {
+		if ((offset | length | (array.length - (length + offset)) | (offset + length)) < 0) {
+			throw new ArrayIndexOutOfBoundsException(String.format(
 					"array length: %d, offset: %d, length: %d",array.length, offset, length));
 		}
 	}
@@ -86,7 +102,7 @@ final class PrimitiveSupport {
 	 */
 	static void checkBounds(char[] array, int offset, int length) {
 		if ((offset | length | (array.length - (length + offset)) | (offset + length)) < 0) {
-			throw new IndexOutOfBoundsException(String.format(
+			throw new ArrayIndexOutOfBoundsException(String.format(
 					"array length: %d, offset: %d, length: %d",array.length, offset, length));
 		}
 	}
@@ -161,6 +177,10 @@ final class PrimitiveSupport {
 
 	static Set<Integer> boxed(IntSet original) {
 		return new BoxedIntSet(original);
+	}
+
+	static Collection<Long> boxed(LongCollection original) {
+		return new BoxedLongCollection(original);
 	}
 
 	static Collection<Byte> boxed(ByteCollection original) {
@@ -958,6 +978,105 @@ final class PrimitiveSupport {
 
 		@Override
 		public Spliterator<Integer> spliterator() {
+			return original.spliterator();
+		}
+	}
+
+	private static class BoxedLongCollection implements Collection<Long> {
+		final LongCollection original;
+
+		BoxedLongCollection(LongCollection original) {
+			this.original = original;
+		}
+
+		@Override
+		public int size() {
+			return original.size();
+		}
+
+		@Override
+		public boolean isEmpty() {
+			return original.isEmpty();
+		}
+
+		@Override
+		public boolean contains(Object o) {
+			if (o != null && o instanceof Long) {
+				return original.contains((long) o);
+			}
+			return false;
+		}
+
+		@Override
+		public Iterator<Long> iterator() {
+			return original.iterator();
+		}
+
+		@Override
+		public Object[] toArray() {
+			return boxed(original.toArray());
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public <T> T[] toArray(T[] a) {
+			Object[] array = (Object[]) Array.newInstance(a.getClass().getComponentType(), size());
+
+			Iterator<Long> j = iterator();
+			for (int i = 0; i < array.length; i++) {
+				array[i] = Long.valueOf(j.next());
+			}
+			return (T[]) array;
+		}
+
+		@Override
+		public boolean add(Long e) {
+			return original.add(e);
+		}
+
+		@Override
+		public boolean remove(Object o) {
+			if (o instanceof Long) {
+				return original.remove((long) o);
+			}
+			return false;
+		}
+
+		@Override
+		public boolean containsAll(Collection<?> c) {
+			return c.stream().allMatch(e -> contains(e));
+		}
+
+		@Override
+		public boolean addAll(Collection<? extends Long> c) {
+			return c.stream().map(i -> add(i)).reduce(false, (l, r) -> l | r);
+		}
+
+		@Override
+		public boolean removeAll(Collection<?> c) {
+			return c.stream().map(i -> remove(i)).reduce(false, (l, r) -> l | r);
+		}
+
+		@Override
+		public boolean retainAll(Collection<?> c) {
+			boolean modified = false;
+			Iterator<Long> i = iterator();
+			for (; i.hasNext();) {
+				if (!c.contains(i.next())) {
+					i.remove();
+					modified = true;
+				}
+			}
+			return modified;
+		}
+
+		@Override
+		public void clear() {
+			original.clear();
+		}
+
+		@Override
+		public Spliterator<Long> spliterator() {
 			return original.spliterator();
 		}
 	}
