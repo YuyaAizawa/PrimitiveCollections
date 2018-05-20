@@ -22,6 +22,8 @@ public final class EmptyIterator {
 		return EmptyIteratorOfChar.SINGLETON;
 	}
 
+
+
 	private enum EmptyIteratorOfInt implements PrimitiveIterator.OfInt {
 		SINGLETON;
 

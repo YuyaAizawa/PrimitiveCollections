@@ -3,12 +3,12 @@ package com.lethe_river.util.primitive;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
+//import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
+//import java.io.IOException;
+//import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
+//import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -17,7 +17,7 @@ import java.util.function.IntConsumer;
 
 import org.junit.Test;
 
-import net.sourceforge.sizeof.SizeOf;
+//import net.sourceforge.sizeof.SizeOf;
 
 public class ScatterIntSetTest {
 
@@ -85,32 +85,32 @@ public class ScatterIntSetTest {
 		assertEquals(oracle, testee.boxedView());
 	}
 
-	@Test
-	public void sizeTest() throws FileNotFoundException {
-		PrintWriter pw = new PrintWriter(new File("C:\\home\\log.txt"));
-		Set<Integer> oracle = new HashSet<>();
-		ScatterIntSet testee = new ScatterIntSet();
-		SizeOf.skipStaticField(true);
-		SizeOf.setMinSizeToLog(1);
-		SizeOf.setLogOutputStream(new OutputStream(){
-			@Override
-			public void write(int b) throws IOException {}
-		});
-		Random random = new Random(1145141919810L);
-		for (int i = 0; i < 11000; i++) {
-			if(oracle.size()%1000==0 || oracle.size() == 100 || oracle.size() == 10) {
-				pw.println("entry size : "+testee.size());
-				pw.println("HashSet<Integer>: "+SizeOf.deepSizeOf(oracle));
-				pw.println("InsScatterTable : "+SizeOf.deepSizeOf(testee));
-				pw.println();
-			}
-			int e = random.nextInt(1000000);
-			oracle.add(e);
-			testee.add(e);
-		}
-		pw.flush();
-		pw.close();
-	}
+//	@Test
+//	public void sizeTest() throws FileNotFoundException {
+//		PrintWriter pw = new PrintWriter(new File("C:\\home\\log.txt"));
+//		Set<Integer> oracle = new HashSet<>();
+//		ScatterIntSet testee = new ScatterIntSet();
+//		SizeOf.skipStaticField(true);
+//		SizeOf.setMinSizeToLog(1);
+//		SizeOf.setLogOutputStream(new OutputStream(){
+//			@Override
+//			public void write(int b) throws IOException {}
+//		});
+//		Random random = new Random(1145141919810L);
+//		for (int i = 0; i < 11000; i++) {
+//			if(oracle.size()%1000==0 || oracle.size() == 100 || oracle.size() == 10) {
+//				pw.println("entry size : "+testee.size());
+//				pw.println("HashSet<Integer>: "+SizeOf.deepSizeOf(oracle));
+//				pw.println("InsScatterTable : "+SizeOf.deepSizeOf(testee));
+//				pw.println();
+//			}
+//			int e = random.nextInt(1000000);
+//			oracle.add(e);
+//			testee.add(e);
+//		}
+//		pw.flush();
+//		pw.close();
+//	}
 
 	@Test
 	public void speedTest() throws FileNotFoundException {

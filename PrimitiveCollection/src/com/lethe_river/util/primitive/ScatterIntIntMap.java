@@ -1,16 +1,9 @@
 package com.lethe_river.util.primitive;
 
-import java.util.AbstractSet;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
-import java.util.Set;
-import java.util.Spliterator;
 
 public final class ScatterIntIntMap implements IntIntMap {
 
@@ -314,11 +307,11 @@ public final class ScatterIntIntMap implements IntIntMap {
 	}
 
 	@Override
-	public Set<IntIntEntry> entries() {
+	public IntIntCursor entryCursor() {
 		if(keys==EMPTY_KEYS) {
-			return Collections.emptySet();
+			return IntIntCursor.empty();
 		}
-		return new EntrySet();
+		return new EntryCursor();
 	}
 
 	/**
@@ -392,111 +385,27 @@ public final class ScatterIntIntMap implements IntIntMap {
 		if(target.size() != size()) {
 			return false;
 		}
-		return entries().containsAll(target.entries());
+
+		IntIntCursor entries = target.entryCursor();
+		while(entries.next()) {
+			if(getOrDefault(entries.key(), entries.value()+1) != entries.value()) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 
 	@Override
 	public int hashCode() {
-		return entries().stream()
-				.mapToInt(c -> c.getKeyInt() ^ c.getValueInt())
-				.sum();
+		int sum = 0;
+		IntIntCursor cursor = entryCursor();
+		while(cursor.next()) {
+			sum += cursor.key() ^ cursor.value();
+		}
+		return sum;
 	}
 
-
-	@Override
-	public Map<Integer, Integer> boxedView() {
-		return new Map<>() {
-
-			@Override
-			public int size() {
-				return size;
-			}
-
-			@Override
-			public boolean isEmpty() {
-				return size == 0;
-			}
-
-			@Override
-			public boolean containsKey(Object key) {
-				if(key instanceof Integer) {
-					ScatterIntIntMap.this.containsKey((int)key);
-				}
-				return false;
-			}
-
-			@Override
-			public boolean containsValue(Object value) {
-				if(value instanceof Integer) {
-					ScatterIntIntMap.this.containsValue((int)value);
-				}
-				return false;
-			}
-
-			@Override
-			public Integer get(Object key) {
-				if(key instanceof Integer) {
-					try {
-						return ScatterIntIntMap.this.get((int)key);
-					} catch(NoSuchElementException e) {
-						return null;
-					}
-				}
-				return null;
-			}
-
-			@Override
-			public Integer put(Integer key, Integer value) {
-				int k = key;
-				int v = value;
-				if(ScatterIntIntMap.this.containsKey(k)) {
-					int tmp = ScatterIntIntMap.this.get(k);
-					ScatterIntIntMap.this.put(k, v);
-					return tmp;
-				}
-				ScatterIntIntMap.this.put(k, v);
-				return null;
-			}
-
-			@Override
-			public Integer remove(Object key) {
-				if(key instanceof Integer) {
-					int k = (int) key;
-					int tmp = ScatterIntIntMap.this.getOrDefault(k, NULL);
-					if(ScatterIntIntMap.this.remove(k)) {
-						return tmp;
-					}
-				}
-				return null;
-			}
-
-			@Override
-			public void putAll(Map<? extends Integer, ? extends Integer> m) {
-				m.forEach((k, v) -> ScatterIntIntMap.this.put(k, v));
-			}
-
-			@Override
-			public void clear() {
-				ScatterIntIntMap.this.clear();
-			}
-
-			@Override
-			public Set<Integer> keySet() {
-				return ScatterIntIntMap.this.keys().boxedView();
-			}
-
-			@Override
-			public Collection<Integer> values() {
-				return ScatterIntIntMap.this.values().boxedView();
-			}
-
-			@Override
-			public Set<java.util.Map.Entry<Integer, Integer>> entrySet() {
-				throw new Error();
-			}
-		};
-	}
 
 	private class KeySet extends AbstractIntSet {
 
@@ -659,110 +568,100 @@ public final class ScatterIntIntMap implements IntIntMap {
 		}
 	}
 
-	private class EntrySet extends AbstractSet<IntIntEntry> {
+	private class EntryCursor implements IntIntCursor {
+
+		// -2:開始, -1:NULL, others:配列の添字
+		int index = -2;
+
+		// 構造的変更検出用
+		int expectedModCount = modCount;
+
+		// removeしたことを示す
+		boolean removed = false;
 
 		@Override
-		public Iterator<IntIntEntry> iterator() {
-			return new Iterator<>() {
-
-				int index = 0;
-
-				// 構造的変更検出用
-				int expectedModCount = modCount;
-
-				// nextで返した数
-				int replied = 0;
-
-				// 削除した要素の数
-				int removed = 0;
-
-				// removeが行える状態
-				boolean removable = false;
-				int cursorKey;
-				int cursorValue;
-
-				IntIntEntry cursor = new IntIntEntry() {
-					@Override
-					public int getKeyInt() {
-						return cursorKey;
-					}
-
-					@Override
-					public int getValueInt() {
-						return cursorValue;
-					}
-
-					@Override
-					public int setValue(int value) {
-						if(!removable) {
-							throw new IllegalStateException();
-						}
-						int retVal = cursorValue;
-						ScatterIntIntMap.this.put(cursorKey, value);
-						cursorValue = value;
-						return retVal;
-					}
-				};
-
-				@Override
-				public boolean hasNext() {
-					return replied < size + removed;
+		public boolean next() {
+			if(expectedModCount != modCount) {
+				throw new ConcurrentModificationException();
+			}
+			if(index == -2) {
+				index = -1;
+				if(nullKey) {
+					return true;
 				}
-
-				@Override
-				public IntIntEntry next() {
-					if(expectedModCount != modCount) {
-						throw new ConcurrentModificationException();
-					}
-					if(replied==0 && nullKey) {
-						replied++;
-						removable = true;
-						cursorKey = NULL;
-						cursorValue = nullValue;
-						return cursor;
-					}
-					try {
-						for(;;) {
-							int k = keys[index];
-							int v = values[index];
-							index++;
-							if(k != NULL) {
-								replied++;
-								removable = true;
-								cursorKey = k;
-								cursorValue = v;
-								return cursor;
-							}
-						}
-					} catch (ArrayIndexOutOfBoundsException e){
-						throw new NoSuchElementException();
-					}
+			}
+			if(removed) {
+				removed = false;
+				if(index != -1 && keys[index] != NULL) {
+					return true;
 				}
-
-				@Override
-				public void remove() {
-					if(expectedModCount != modCount) {
-						throw new ConcurrentModificationException();
-					}
-					if(!removable) {
-						throw new IllegalStateException();
-					}
-					ScatterIntIntMap.this.remove(cursorKey);
-					expectedModCount = modCount;
-					removed++;
-					removable = false;
-				}
-			};
+			}
+			if(index >= keys.length) {
+				return false;
+			}
+			try {
+				do {
+					index++;
+				} while (keys[index] == NULL);
+				removed = false;
+				return true;
+			} catch (ArrayIndexOutOfBoundsException e){
+				return false;
+			}
 		}
 
 		@Override
-		public int size() {
-			return size;
+		public int key() {
+			if(expectedModCount != modCount) {
+				throw new ConcurrentModificationException();
+			}
+			if(removed == true) {
+				throw new IllegalStateException();
+			}
+			try {
+				return index == -1 ? NULL : keys[index];
+			} catch (ArrayIndexOutOfBoundsException e){
+				throw new IllegalStateException();
+			}
 		}
 
 		@Override
-		public Spliterator<IntIntEntry> spliterator() {
-			return IntIntEntry.spliterator(iterator(), size, Spliterator.DISTINCT | Spliterator.NONNULL | Spliterator.SUBSIZED);
+		public int value() {
+			if(expectedModCount != modCount) {
+				throw new ConcurrentModificationException();
+			}
+			if(removed == true) {
+				throw new IllegalStateException();
+			}
+			try {
+				return index == -1 ? nullValue : values[index];
+			} catch (ArrayIndexOutOfBoundsException e){
+				throw new IllegalStateException();
+			}
+		}
+
+		@Override
+		public void remove() {
+			if(expectedModCount != modCount) {
+				throw new ConcurrentModificationException();
+			}
+			if(removed || index == -2) {
+				throw new IllegalStateException();
+			}
+			ScatterIntIntMap.this.remove(index == -1 ? NULL : keys[index]);
+			removed = true;
+		}
+
+		@Override
+		public void setValue(int value) {
+			if(removed || index == -2) {
+				throw new IllegalStateException();
+			}
+			try {
+				ScatterIntIntMap.this.put(index == -1 ? NULL : keys[index], value);
+			} catch(ArrayIndexOutOfBoundsException e) {
+				throw new IllegalStateException();
+			}
 		}
 	}
 }

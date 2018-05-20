@@ -2,11 +2,11 @@ package com.lethe_river.util.primitive;
 
 import java.util.function.Predicate;
 
-public interface IntIntPredicate extends Predicate<IntIntEntry> {
+public interface IntIntPredicate extends Predicate<IntIntCursor> {
 	boolean test(int i, int j);
-	
+
 	@Override
-	default boolean test(IntIntEntry t) {
-		return test(t.getKeyInt(), t.getValueInt());
+	default boolean test(IntIntCursor t) {
+		return test(t.key(), t.value());
 	}
 }

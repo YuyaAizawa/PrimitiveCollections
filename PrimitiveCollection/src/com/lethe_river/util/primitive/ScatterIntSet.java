@@ -339,6 +339,7 @@ public final class ScatterIntSet extends AbstractIntSet implements IntSet, Seria
 	 */
 	@Override
 	public PrimitiveIterator.OfInt iterator() {
+
 		// 1つ目は0を返す
 		return new PrimitiveIterator.OfInt() {
 

@@ -1,17 +1,13 @@
 package com.lethe_river.util.primitive;
 
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
-
-// TODO 統一したPrimitiveMapの作成 entrySetにあたる部分の設計再考
 
 /**
  * intからintへの写像
  * @author YuyaAizawa
  *
  */
-public interface IntIntMap {
+public interface IntIntMap extends PrimitiveMap<Integer, Integer> {
 
 	@Override
 	boolean equals(Object obj);
@@ -23,6 +19,7 @@ public interface IntIntMap {
 	 * この写像で定義された元と像の対応関係の数を返す．
 	 * @return 要素数
 	 */
+	@Override
 	int size();
 
 	/**
@@ -33,6 +30,14 @@ public interface IntIntMap {
 	boolean containsKey(int key);
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	default boolean containsKey(Integer key) {
+		return containsKey((int)key);
+	}
+
+	/**
 	 * 指定したint値がこのIntIntMapの終域に含まれるか判定する
 	 * @param value
 	 * @return 含まれればtrue
@@ -40,8 +45,17 @@ public interface IntIntMap {
 	boolean containsValue(int value);
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	default boolean containsValue(Integer value) {
+		return containsValue((int)value);
+	}
+
+	/**
 	 * このIntIntMapで定義された対応関係を全て削除する(オプションの操作)
 	 */
+	@Override
 	void clear();
 
 	/**
@@ -53,12 +67,28 @@ public interface IntIntMap {
 	int get(int key);
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	default Integer get(Integer key) {
+		return get((int)key);
+	}
+
+	/**
 	 * 指定した元に対する像を返す．指定された元に対する像が定義されていないときはdefを返す．
 	 * @param key 元
 	 * @param def 像が存在しないときの値
 	 * @return 像またはdefで指定した値
 	 */
 	int getOrDefault(int key, int def);
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	default Integer getOrDefault(Integer key, Integer def) {
+		return getOrDefault((int)key, (int)def);
+	}
 
 	/**
 	 * 指定した元と像の対応をこの写像に定義する．既に同一の元に対する像が定義されていた場合置き換える．(オプションの操作)
@@ -69,6 +99,14 @@ public interface IntIntMap {
 	void put(int key, int value);
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	default void put(Integer key, Integer value) {
+		put((int)key, (int)value);
+	}
+
+	/**
 	 * 指定した元をもつ対応関係をこの写像から取り除く
 	 * @param key 元
 	 * @return 指定された元が存在すればtrue
@@ -76,26 +114,28 @@ public interface IntIntMap {
 	boolean remove(int key);
 
 	/**
-	 * この写像の始域を返す．戻り値への変更はこの写像へ反映される．
-	 * @return 始域
+	 * {@inheritDoc}
 	 */
+	@Override
+	default boolean remove(Integer key) {
+		return remove((int)key);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	IntSet keys();
 
 	/**
-	 * この写像の終域を返す．戻り値への変更はこの写像へ反映される．
-	 * @return 終域
+	 * {@inheritDoc}
 	 */
+	@Override
 	IntCollection values();
 
 	/**
-	 * この写像の各元の対応関係の集合を返す．戻り値への変更はこの写像に反映される．
-	 * @return 各元の対応関係を表す集合
+	 * {@inheritDoc}
 	 */
-	Set<IntIntEntry> entries();
-
-	/**
-	 * ラッパー方のjava.util.Mapを返す．戻り値への変更はこの写像に反映される．
-	 * @return java.util.Map
-	 */
-	Map<Integer, Integer> boxedView();
+	@Override
+	IntIntCursor entryCursor();
 }
