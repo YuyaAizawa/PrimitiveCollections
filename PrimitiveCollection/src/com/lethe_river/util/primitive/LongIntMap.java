@@ -23,7 +23,7 @@ public interface LongIntMap extends PrimitiveMap<Long, Integer> {
 	int size();
 
 	/**
-	 * 指定したlong値がこのIntIntMapの始域に含まれるか判定する
+	 * 指定したlong値がこのLongIntMapの始域に含まれるか判定する
 	 * @param key
 	 * @return 含まれればtrue
 	 */
