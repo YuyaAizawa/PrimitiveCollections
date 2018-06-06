@@ -198,7 +198,7 @@ public abstract class AbstractIntList extends AbstractIntCollection implements I
 	public String toString() {
 		StringJoiner sj = new StringJoiner(", ", "<", ">");
 		forEach(i -> sj.add(Integer.toString(i)));
-		return super.toString();
+		return sj.toString();
 	}
 }
 class SubList extends AbstractIntList {

@@ -194,10 +194,10 @@ public final class ArrayIntList extends AbstractIntList implements IntList, Rand
 
 	@Override
 	public IntListIterator listIterator(int i) {
-		return new ArrayListLterator(i);
+		return new ArrayListIterator(i);
 	}
 
-	private class ArrayListLterator implements IntListIterator {
+	private class ArrayListIterator implements IntListIterator {
 
 		// 構造的変更検出用
 		int expectedModCount = modCount;
@@ -212,7 +212,7 @@ public final class ArrayIntList extends AbstractIntList implements IntList, Rand
 		 */
 		int index;
 
-		public ArrayListLterator(int index) {
+		public ArrayListIterator(int index) {
 			this.index = index;
 		}
 
