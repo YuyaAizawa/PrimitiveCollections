@@ -1,6 +1,6 @@
 package com.lethe_river.util.primitive;
 
-interface IntIntCursor extends PrimitiveMapEntryCursor<Integer, Integer> {
+public interface IntIntCursor extends PrimitiveMapEntryCursor<Integer, Integer> {
 
 	/**
 	 * {@inheritDoc}
