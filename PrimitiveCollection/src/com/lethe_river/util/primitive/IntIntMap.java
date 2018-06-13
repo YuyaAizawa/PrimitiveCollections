@@ -7,20 +7,7 @@ import java.util.NoSuchElementException;
  * @author YuyaAizawa
  *
  */
-public interface IntIntMap extends PrimitiveMap<Integer, Integer> {
-
-	@Override
-	boolean equals(Object obj);
-
-	@Override
-	int hashCode();
-
-	/**
-	 * この写像で定義された元と像の対応関係の数を返す．
-	 * @return 要素数
-	 */
-	@Override
-	int size();
+public interface IntIntMap extends PrimitiveMap<Integer, Integer>{
 
 	/**
 	 * 指定したint値がこのIntIntMapの始域に含まれるか判定する
@@ -30,33 +17,11 @@ public interface IntIntMap extends PrimitiveMap<Integer, Integer> {
 	boolean containsKey(int key);
 
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	default boolean containsKey(Integer key) {
-		return containsKey((int)key);
-	}
-
-	/**
 	 * 指定したint値がこのIntIntMapの終域に含まれるか判定する
 	 * @param value
 	 * @return 含まれればtrue
 	 */
 	boolean containsValue(int value);
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	default boolean containsValue(Integer value) {
-		return containsValue((int)value);
-	}
-
-	/**
-	 * このIntIntMapで定義された対応関係を全て削除する(オプションの操作)
-	 */
-	@Override
-	void clear();
 
 	/**
 	 * 指定した元に対する像を返す．
@@ -67,28 +32,12 @@ public interface IntIntMap extends PrimitiveMap<Integer, Integer> {
 	int get(int key);
 
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	default Integer get(Integer key) {
-		return get((int)key);
-	}
-
-	/**
 	 * 指定した元に対する像を返す．指定された元に対する像が定義されていないときはdefを返す．
 	 * @param key 元
 	 * @param def 像が存在しないときの値
 	 * @return 像またはdefで指定した値
 	 */
 	int getOrDefault(int key, int def);
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	default Integer getOrDefault(Integer key, Integer def) {
-		return getOrDefault((int)key, (int)def);
-	}
 
 	/**
 	 * 指定した元と像の対応をこの写像に定義する．既に同一の元に対する像が定義されていた場合置き換える．(オプションの操作)
@@ -99,14 +48,6 @@ public interface IntIntMap extends PrimitiveMap<Integer, Integer> {
 	void put(int key, int value);
 
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	default void put(Integer key, Integer value) {
-		put((int)key, (int)value);
-	}
-
-	/**
 	 * 指定した元をもつ対応関係をこの写像から取り除く
 	 * @param key 元
 	 * @return 指定された元が存在すればtrue
@@ -114,28 +55,33 @@ public interface IntIntMap extends PrimitiveMap<Integer, Integer> {
 	boolean remove(int key);
 
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	default boolean remove(Integer key) {
-		return remove((int)key);
-	}
-
-	/**
-	 * {@inheritDoc}
+	 * この写像の始域を返す．戻り値への変更はこの写像へ反映される．
+	 * @return 始域
 	 */
 	@Override
 	IntSet keys();
 
 	/**
-	 * {@inheritDoc}
+	 * この写像の終域を返す．戻り値への変更はこの写像へ反映される．
+	 * @return 終域
 	 */
 	@Override
 	IntCollection values();
 
 	/**
-	 * {@inheritDoc}
+	 * この写像の各元の対応関係を列挙するカーソルを返す．
+	 * @return 対応関係を列挙するカーソル
 	 */
 	@Override
 	IntIntCursor entryCursor();
+
+	/**
+	 * 指定されたオブジェクトがこの写像と同値か判定する．
+	 * 元と像の対応関係が完全に一致すればtrue.
+	 * IntIntMap以外に対しては常にfalse.
+	 * @param obj
+	 * @return
+	 */
+	@Override
+	boolean equals(Object obj);
 }

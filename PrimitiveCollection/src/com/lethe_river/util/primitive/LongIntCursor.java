@@ -45,11 +45,6 @@ public interface LongIntCursor extends PrimitiveMapEntryCursor<Long, Integer> {
 	 */
 	void setValue(int value);
 
-	@Override
-	default void setValue(Integer value) {
-		setValue((int)value);
-	}
-
 	/**
 	 * 空のカーソルを返す
 	 * @return 空のカーソル

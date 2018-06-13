@@ -28,11 +28,4 @@ public interface PrimitiveMapEntryCursor<K, V> {
 	 * @throws IllegalStateException カーソルの位置が不正な場合
 	 */
 	void remove();
-
-	/**
-	 * 現在のカーソルが指すバリューを更新する(オプションの操作)
-	 * @throws UnsupportedOperationException この機能がサポートされていない場合
-	 * @throws IllegalStateException カーソルの位置が不正な場合
-	 */
-	void setValue(V value);
 }
