@@ -5,18 +5,18 @@ import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 
-public final class ScatterIntIntMap implements IntIntMap {
+public final class ScatterLongIntMap implements LongIntMap {
 
-	private static final int NULL = 0;
+	private static final long NULL = 0;
 
 	private static final int DEFAULT_INIT_CAPACITY = 11;
 	private static final float DEFAULT_LOAD_FACTOR = 0.75f;
 	private static final int MAX_CAPACITY = 1<<29;
 
-	private static final int[] EMPTY_KEYS = {};
+	private static final long[] EMPTY_KEYS = {};
 
 	// NULL以外のkey, value
-	private int[] keys;
+	private long[] keys;
 	private int[] values;
 
 	// NULLのkey, value
@@ -41,14 +41,14 @@ public final class ScatterIntIntMap implements IntIntMap {
 	 * @param initCapacity 初期容量
 	 * @param loadFactor 負荷係数
 	 */
-	public ScatterIntIntMap(int initCapacity, float loadFactor) {
+	public ScatterLongIntMap(int initCapacity, float loadFactor) {
 		if(initCapacity < 0) {
 			throw new IllegalArgumentException("initCapacity must be positive :"+initCapacity);
 		}
 
 		keys = initCapacity == 0 ?
 				EMPTY_KEYS :
-				new int[initCapacity];
+				new long[initCapacity];
 		values = initCapacity == 0 ?
 				null :
 				new int[initCapacity];
@@ -65,14 +65,14 @@ public final class ScatterIntIntMap implements IntIntMap {
 	 * 負荷係数はデフォルトの値(0.75)が用いられる
 	 * @param initCapacity 初期容量
 	 */
-	public ScatterIntIntMap(int initCapacity) {
+	public ScatterLongIntMap(int initCapacity) {
 		this(initCapacity, DEFAULT_LOAD_FACTOR);
 	}
 
 	/**
 	 * デフォルトの初期容量(11)と負荷係数を利用してIntIntScatterMapを生成する.
 	 */
-	public ScatterIntIntMap() {
+	public ScatterLongIntMap() {
 		keys = EMPTY_KEYS;
 		nullKey = false;
 		size = 0;
@@ -92,7 +92,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 
 
 	@Override
-	public boolean containsKey(int key) {
+	public boolean containsKey(long key) {
 		if(key == NULL) {
 			return nullKey;
 		}
@@ -109,7 +109,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 			if(index == keys.length) {
 				index = 0;
 			}
-			int j = keys[index];
+			long j = keys[index];
 			if(j == key) {
 				return true;
 			}
@@ -142,7 +142,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 	}
 
 	@Override
-	public int get(int key) {
+	public int get(long key) {
 		if(key == NULL) {
 			return nullValue;
 		}
@@ -159,7 +159,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 			if(index == keys.length) {
 				index = 0;
 			}
-			int j = keys[index];
+			long j = keys[index];
 			if(j == key) {
 				return values[index];
 			}
@@ -171,7 +171,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 	}
 
 	@Override
-	public int getOrDefault(int key, int def) {
+	public int getOrDefault(long key, int def) {
 		if(key == NULL) {
 			return nullValue;
 		}
@@ -188,7 +188,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 			if(index == keys.length) {
 				index = 0;
 			}
-			int j = keys[index];
+			long j = keys[index];
 			if(j == key) {
 				return values[index];
 			}
@@ -201,7 +201,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 
 
 	@Override
-	public void put(int key, int value) {
+	public void put(long key, int value) {
 		if(key == NULL) {
 			if(!nullKey) {
 				nullKey = true;
@@ -221,7 +221,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 			if(index == keys.length) {
 				index = 0;
 			}
-			int j = keys[index];
+			long j = keys[index];
 			if(j == key) {
 				values[index] = value;
 				return;
@@ -236,7 +236,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 	}
 
 	@Override
-	public boolean remove(int key) {
+	public boolean remove(long key) {
 		if(key == NULL) {
 			if(nullKey) {
 				nullKey = false;
@@ -254,7 +254,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 			if(index == keys.length) {
 				index = 0;
 			}
-			int j = keys[index];
+			long j = keys[index];
 			if(j == key) {
 				pull(index);
 				size--;
@@ -277,7 +277,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 			if(src == keys.length) {
 				src = 0;
 			}
-			int i = keys[src];
+			long i = keys[src];
 			if(i == NULL || src == index) {
 				keys[dst] = NULL;
 				return;
@@ -294,7 +294,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 	}
 
 	@Override
-	public IntSet keys() {
+	public LongSet keys() {
 		return new KeySet();
 	}
 
@@ -307,9 +307,9 @@ public final class ScatterIntIntMap implements IntIntMap {
 	}
 
 	@Override
-	public IntIntCursor entryCursor() {
+	public LongIntCursor entryCursor() {
 		if(keys==EMPTY_KEYS) {
-			return IntIntCursor.empty();
+			return LongIntCursor.empty();
 		}
 		return new EntryCursor();
 	}
@@ -337,14 +337,14 @@ public final class ScatterIntIntMap implements IntIntMap {
 	}
 
 	private void rehash(int nextCapacity) {
-		int[] tmpKeys = new int[nextCapacity];
+		long[] tmpKeys = new long[nextCapacity];
 		int[] tmpValues = new int[nextCapacity];
 		for (int i = 0; i < keys.length; i++) {
 			if(keys[i] == NULL) {
 				continue;
 			}
 
-			int j = keys[i];
+			long j = keys[i];
 			for(int index = hash(j) % tmpKeys.length;;index++) {
 				if(index == tmpKeys.length) {
 					index = 0;
@@ -368,9 +368,8 @@ public final class ScatterIntIntMap implements IntIntMap {
 	 * @param j 要素
 	 * @return 要素のハッシュ(正数のint)
 	 */
-	private int hash(int j) {
-		// 正の数にするだけ
-		return Integer.MAX_VALUE & j;
+	private int hash(long l) {
+		return Integer.MAX_VALUE & ((int)(l^(l>>>32)));
 	}
 
 	@Override
@@ -378,15 +377,15 @@ public final class ScatterIntIntMap implements IntIntMap {
 		if(object == this) {
 			return true;
 		}
-		if(object == null || !(object instanceof IntIntMap)) {
+		if(object == null || !(object instanceof LongIntMap)) {
 			return false;
 		}
-		IntIntMap target = (IntIntMap) object;
+		LongIntMap target = (LongIntMap) object;
 		if(target.size() != size()) {
 			return false;
 		}
 
-		IntIntCursor entries = target.entryCursor();
+		LongIntCursor entries = target.entryCursor();
 		while(entries.next()) {
 			if(getOrDefault(entries.key(), entries.value()+1) != entries.value()) {
 				return false;
@@ -399,7 +398,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 	@Override
 	public int hashCode() {
 		int sum = 0;
-		IntIntCursor cursor = entryCursor();
+		LongIntCursor cursor = entryCursor();
 		while(cursor.next()) {
 			sum += cursor.key() ^ cursor.value();
 		}
@@ -407,7 +406,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 	}
 
 
-	private class KeySet extends AbstractIntSet {
+	private class KeySet extends AbstractLongSet {
 
 		@Override
 		public int size() {
@@ -415,9 +414,9 @@ public final class ScatterIntIntMap implements IntIntMap {
 		}
 
 		@Override
-		public PrimitiveIterator.OfInt iterator() {
+		public PrimitiveIterator.OfLong iterator() {
 			// 1つ目は0を返す
-			return new PrimitiveIterator.OfInt() {
+			return new PrimitiveIterator.OfLong() {
 
 				int index = 0;
 
@@ -432,7 +431,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 
 				// removeが行える状態
 				boolean removable = false;
-				int removeTarget = 0;
+				long removeTarget = 0;
 
 				@Override
 				public boolean hasNext() {
@@ -440,7 +439,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 				}
 
 				@Override
-				public int nextInt() {
+				public long nextLong() {
 					if(expectedModCount != modCount) {
 						throw new ConcurrentModificationException();
 					}
@@ -452,7 +451,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 					}
 					try {
 						for(;;) {
-							int retVal = keys[index++];
+							long retVal = keys[index++];
 							if(retVal != NULL) {
 								replied++;
 								removable = true;
@@ -473,7 +472,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 					if(!removable) {
 						throw new IllegalStateException();
 					}
-					ScatterIntIntMap.this.remove(removeTarget);
+					ScatterLongIntMap.this.remove(removeTarget);
 					expectedModCount = modCount;
 					removed++;
 					removable = false;
@@ -482,13 +481,13 @@ public final class ScatterIntIntMap implements IntIntMap {
 		}
 
 		@Override
-		public boolean contains(int i) {
-			return ScatterIntIntMap.this.containsKey(i);
+		public boolean contains(long l) {
+			return ScatterLongIntMap.this.containsKey(l);
 		}
 
 		@Override
-		public boolean remove(int i) {
-			return ScatterIntIntMap.this.remove(i);
+		public boolean remove(long l) {
+			return ScatterLongIntMap.this.remove(l);
 		}
 	}
 
@@ -517,7 +516,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 
 				// removeが行える状態
 				boolean removable = false;
-				int removeTarget = 0;
+				long removeTarget = 0;
 
 				@Override
 				public boolean hasNext() {
@@ -538,7 +537,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 					try {
 						for(;;) {
 							int v = values[index];
-							int k = keys[index++];
+							long k = keys[index++];
 							if(k != NULL) {
 								replied++;
 								removable = true;
@@ -559,7 +558,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 					if(!removable) {
 						throw new IllegalStateException();
 					}
-					ScatterIntIntMap.this.remove(removeTarget);
+					ScatterLongIntMap.this.remove(removeTarget);
 					expectedModCount = modCount;
 					removed++;
 					removable = false;
@@ -568,7 +567,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 		}
 	}
 
-	private class EntryCursor implements IntIntCursor {
+	private class EntryCursor implements LongIntCursor {
 
 		// -2:開始, -1:NULL, others:配列の添字
 		int index = -2;
@@ -611,7 +610,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 		}
 
 		@Override
-		public int key() {
+		public long key() {
 			if(expectedModCount != modCount) {
 				throw new ConcurrentModificationException();
 			}
@@ -648,7 +647,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 			if(removed || index == -2) {
 				throw new IllegalStateException();
 			}
-			ScatterIntIntMap.this.remove(index == -1 ? NULL : keys[index]);
+			ScatterLongIntMap.this.remove(index == -1 ? NULL : keys[index]);
 			removed = true;
 		}
 
@@ -658,7 +657,7 @@ public final class ScatterIntIntMap implements IntIntMap {
 				throw new IllegalStateException();
 			}
 			try {
-				ScatterIntIntMap.this.put(index == -1 ? NULL : keys[index], value);
+				ScatterLongIntMap.this.put(index == -1 ? NULL : keys[index], value);
 			} catch(ArrayIndexOutOfBoundsException e) {
 				throw new IllegalStateException();
 			}

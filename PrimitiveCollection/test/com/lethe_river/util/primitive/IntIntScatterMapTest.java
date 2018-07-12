@@ -1,13 +1,11 @@
 package com.lethe_river.util.primitive;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.junit.Test;
 
@@ -103,32 +101,64 @@ public class IntIntScatterMapTest {
 	}
 
 	@Test
-	public void StreamTest() {
-		Map<Integer, Integer> oracle = new HashMap<>();
-		ScatterIntIntMap testee = new ScatterIntIntMap(11, 0.75f);
+	public void entriesTest() {
+		ScatterIntIntMap map = new ScatterIntIntMap();
+		map.put(0, 1);
+		map.put(1, 2);
+		map.put(-2, -3);
 
-
-		Random random = new Random(1145141919810L);
-
-		for (int i = 0; i < 100; i++) {
-			int k = random.nextInt(100);
-			int v = random.nextInt(100);
-			oracle.put(k, v);
-			testee.put(k, v);
+		IntIntCursor cursor = map.entryCursor();
+		int count = 0;
+		while(cursor.next()) {
+			count++;
+			switch(cursor.key()) {
+			case 0:
+				assertEquals(1, cursor.value());
+				break;
+			case 1:
+				assertEquals(2, cursor.value());
+				cursor.remove();
+				break;
+			case -2:
+				assertEquals(-3, cursor.value());
+				cursor.setValue(3);
+				break;
+			default:
+				fail();
+			}
 		}
-
-		Set<Entry<Integer, Integer>> actual = testee.boxedView()
-				.entrySet()
-				.stream()
-				.filter(e -> e.getKey() < e.getValue())
-				.collect(Collectors.toSet());
-
-		Set<Entry<Integer, Integer>> expected = oracle
-				.entrySet()
-				.stream()
-				.filter(e -> e.getKey() < e.getValue())
-				.collect(Collectors.toSet());
-
-		assertEquals(expected, actual);
+		assertEquals(3, count);
+		assertEquals(114514, map.getOrDefault(2, 114514));
+		assertEquals(3, map.get(-2));
 	}
+
+//	@Test
+//	public void StreamTest() {
+//		Map<Integer, Integer> oracle = new HashMap<>();
+//		ScatterIntIntMap testee = new ScatterIntIntMap(11, 0.75f);
+//
+//
+//		Random random = new Random(1145141919810L);
+//
+//		for (int i = 0; i < 100; i++) {
+//			int k = random.nextInt(100);
+//			int v = random.nextInt(100);
+//			oracle.put(k, v);
+//			testee.put(k, v);
+//		}
+//
+//		Set<Entry<Integer, Integer>> actual = testee.boxedView()
+//				.entrySet()
+//				.stream()
+//				.filter(e -> e.getKey() < e.getValue())
+//				.collect(Collectors.toSet());
+//
+//		Set<Entry<Integer, Integer>> expected = oracle
+//				.entrySet()
+//				.stream()
+//				.filter(e -> e.getKey() < e.getValue())
+//				.collect(Collectors.toSet());
+//
+//		assertEquals(expected, actual);
+//	}
 }

@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.PrimitiveIterator;
 import java.util.Spliterator;
 import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
 
 /**
  * PrimitiveCollectionのそれぞれの要素に対する操作を提供するインターフェース
@@ -33,6 +34,19 @@ interface IntIterable extends PrimitiveIterable<Integer, IntConsumer> {
 
 	@Override
 	default void forEach(IntConsumer action) {
+		Objects.requireNonNull(action);
+		iterator().forEachRemaining(action);
+	}
+}
+
+interface LongIterable extends PrimitiveIterable<Long, LongConsumer> {
+	@Override
+	PrimitiveIterator.OfLong iterator();
+
+	Spliterator.OfLong spliterator();
+
+	@Override
+	default void forEach(LongConsumer action) {
 		Objects.requireNonNull(action);
 		iterator().forEachRemaining(action);
 	}

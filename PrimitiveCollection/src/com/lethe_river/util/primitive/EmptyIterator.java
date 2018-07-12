@@ -2,12 +2,17 @@ package com.lethe_river.util.primitive;
 
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
+import java.util.PrimitiveIterator.OfLong;
 
 public final class EmptyIterator {
 	private EmptyIterator() {}
 
 	public static PrimitiveIterator.OfInt ofInt() {
 		return EmptyIteratorOfInt.SINGLETON;
+	}
+
+	public static OfLong ofLong() {
+		return EmptyIteratorOfLong.SINGLETON;
 	}
 
 	public static ByteIterator ofByte() {
@@ -22,6 +27,8 @@ public final class EmptyIterator {
 		return EmptyIteratorOfChar.SINGLETON;
 	}
 
+
+
 	private enum EmptyIteratorOfInt implements PrimitiveIterator.OfInt {
 		SINGLETON;
 
@@ -31,6 +38,19 @@ public final class EmptyIterator {
 		}
 		@Override
 		public int nextInt() {
+			throw new NoSuchElementException();
+		}
+	}
+
+	private enum EmptyIteratorOfLong implements PrimitiveIterator.OfLong {
+		SINGLETON;
+
+		@Override
+		public boolean hasNext() {
+			return false;
+		}
+		@Override
+		public long nextLong() {
 			throw new NoSuchElementException();
 		}
 	}

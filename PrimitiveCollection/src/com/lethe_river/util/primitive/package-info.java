@@ -1,7 +1,7 @@
 /**
  * プリミティブを扱うコレクションが含まれる.
  *
- * 今のところint, byte, char用のみ．必要ができたら作る
+ * 今のところint, long, byte, char用のみ．必要ができたら作る
  *
  * 主なコンセプト
  *
@@ -29,6 +29,8 @@
  * - PrimitiveMap
  *   - IntIntMap
  *     - ScatterIntIntMap
+ *   - LongIntMap
+ *     - ScatterLongIntMap
  */
 package com.lethe_river.util.primitive;
 
@@ -60,4 +62,6 @@ package com.lethe_river.util.primitive;
  *     Entryをmutableにして再生成を抑制
  *       標準ライブラリはStream処理でEntryを一時的に保存するので不正な結果
  *     Entryを取り出す部分(boxedやらspliteratorやら)でオブジェクトを遅延生成
+ *       標準ライブラリでは取り出したエントリは元のマップの変更に追従する
+ *       互換性が保てないため，マップ系はboxedなしにするか
  */

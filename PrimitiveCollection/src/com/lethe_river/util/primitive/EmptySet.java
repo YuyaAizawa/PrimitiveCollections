@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.PrimitiveIterator;
 import java.util.SortedSet;
 import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
 
 public final class EmptySet {
 	private EmptySet() {}
@@ -15,11 +16,15 @@ public final class EmptySet {
 		return EmptyIntSet.SINGLETON;
 	}
 
+	public static LongSortedSet ofLong() {
+		return EmptyLongSet.SINGLETON;
+	}
+
 	public static ByteSortedSet ofByte() {
 		return EmptyByteSet.SINGLETON;
 	}
 
-	static CharSet ofChar() {
+	public static CharSet ofChar() {
 		return EmptyCharSet.SINGLETON;
 	}
 
@@ -80,6 +85,65 @@ public final class EmptySet {
 
 		@Override
 		public SortedSet<Integer> boxedView() {
+			return Collections.emptySortedSet();
+		}
+	}
+
+	private static final class EmptyLongSet extends AbstractLongSet implements LongSortedSet {
+
+		public static final LongSortedSet SINGLETON = new EmptyLongSet();
+
+		private EmptyLongSet() {}
+
+		private Object readResolve() {
+			return SINGLETON;
+		}
+
+		@Override
+		public void forEach(LongConsumer action) {
+			Objects.requireNonNull(action);
+		}
+		@Override
+		public PrimitiveIterator.OfLong iterator() {
+			return EmptyIterator.ofLong();
+		}
+		@Override
+		public int size() {
+			return 0;
+		}
+
+		@Override
+		public Comparator<Long> comparator() {
+			return null;
+		}
+
+		@Override
+		public long first() {
+			throw new NoSuchElementException();
+		}
+
+		@Override
+		public long last() {
+			throw new NoSuchElementException();
+		}
+
+		@Override
+		public LongSortedSet subSet(long from, long to) {
+			return this;
+		}
+
+		@Override
+		public LongSortedSet headSet(long to) {
+			return this;
+		}
+
+		@Override
+		public LongSortedSet tailSet(long from) {
+			return this;
+		}
+
+		@Override
+		public SortedSet<Long> boxedView() {
 			return Collections.emptySortedSet();
 		}
 	}
