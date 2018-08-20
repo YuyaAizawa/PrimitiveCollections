@@ -54,7 +54,7 @@ public abstract class AbstractIntSet extends AbstractIntCollection implements In
 				modified |= remove(i.nextInt());
 		} else {
 			for (PrimitiveIterator.OfInt i = iterator(); i.hasNext(); ) {
-				if (is.contains(i.next())) {
+				if (is.contains(i.nextInt())) {
 					i.remove();
 					modified = true;
 				}

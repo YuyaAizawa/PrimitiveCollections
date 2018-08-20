@@ -17,7 +17,7 @@ public interface IntIntCursor extends PrimitiveMapEntryCursor<Integer, Integer> 
 
 	@Override
 	default Integer keyAsObject() {
-		return key();
+		return Integer.valueOf(key());
 	}
 
 	/**
@@ -29,7 +29,7 @@ public interface IntIntCursor extends PrimitiveMapEntryCursor<Integer, Integer> 
 
 	@Override
 	default Integer valueAsObject() {
-		return value();
+		return Integer.valueOf(value());
 	}
 
 	/**

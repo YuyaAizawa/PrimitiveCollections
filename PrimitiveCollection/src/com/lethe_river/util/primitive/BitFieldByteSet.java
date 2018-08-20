@@ -2,6 +2,7 @@ package com.lethe_river.util.primitive;
 
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
+import java.util.RandomAccess;
 
 /**
  * ビットフィールドで実装されたByteSet
@@ -9,7 +10,7 @@ import java.util.NoSuchElementException;
  * @author YuyaAizawa
  *
  */
-public final class BitFieldByteSet extends AbstractByteSortedSet implements ByteSortedSet {
+public final class BitFieldByteSet extends AbstractByteSortedSet implements RandomAccess {
 	private static final int[] EMPTY_BIT_FIELD = {};
 
 	/**
@@ -80,9 +81,8 @@ public final class BitFieldByteSet extends AbstractByteSortedSet implements Byte
 		}
 		if(bs instanceof BitFieldByteSet) {
 			return addAll((BitFieldByteSet)bs);
-		} else {
-			return super.addAll(bs);
 		}
+		return super.addAll(bs);
 	}
 
 	@Override

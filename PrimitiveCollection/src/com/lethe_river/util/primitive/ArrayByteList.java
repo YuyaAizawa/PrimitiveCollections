@@ -12,7 +12,7 @@ import java.util.RandomAccess;
  * @author YuyaAizawa
  *
  */
-public final class ArrayByteList extends AbstractByteList implements ByteList, RandomAccess {
+public final class ArrayByteList extends AbstractByteList implements RandomAccess {
 
 	private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE >> 1;
 

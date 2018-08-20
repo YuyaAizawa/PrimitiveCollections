@@ -1,6 +1,5 @@
 package com.lethe_river.util.primitive;
 
-import java.io.Serializable;
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
 
@@ -16,7 +15,7 @@ import java.util.NoSuchElementException;
  *
  */
 
-public final class ScatterCharSet extends AbstractCharSet implements CharSet, Serializable {
+public final class ScatterCharSet extends AbstractCharSet {
 
 
 	// NULLをあらわす数字
@@ -186,9 +185,8 @@ public final class ScatterCharSet extends AbstractCharSet implements CharSet, Se
 				hasNull = false;
 				size--;
 				return true;
-			} else {
-				return false;
 			}
+			return false;
 		}
 
 		if(field==EMPTY_DATA) {
@@ -226,13 +224,12 @@ public final class ScatterCharSet extends AbstractCharSet implements CharSet, Se
 				field[dst] = NULL;
 				modCount++;
 				return;
-			} else {
-				int pos = hash(ch) % field.length;
-				if((dst < src && pos <= dst)
-				|| (src < dst && (src < pos && pos <= dst))) {
-					field[dst] = ch;
-					dst = src;
-				}
+			}
+			int pos = hash(ch) % field.length;
+			if((dst < src && pos <= dst)
+			|| (src < dst && (src < pos && pos <= dst))) {
+				field[dst] = ch;
+				dst = src;
 			}
 		}
 
@@ -301,7 +298,7 @@ public final class ScatterCharSet extends AbstractCharSet implements CharSet, Se
 	 * @param j 要素
 	 * @return 要素のハッシュ(正数のint)
 	 */
-	private int hash(char j) {
+	private static int hash(char j) {
 		return Integer.MAX_VALUE & hashFunction.hash(j);
 	}
 

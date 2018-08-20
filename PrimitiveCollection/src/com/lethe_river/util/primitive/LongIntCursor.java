@@ -17,7 +17,7 @@ public interface LongIntCursor extends PrimitiveMapEntryCursor<Long, Integer> {
 
 	@Override
 	default Long keyAsObject() {
-		return key();
+		return Long.valueOf(key());
 	}
 
 	/**
@@ -29,7 +29,7 @@ public interface LongIntCursor extends PrimitiveMapEntryCursor<Long, Integer> {
 
 	@Override
 	default Integer valueAsObject() {
-		return value();
+		return Integer.valueOf(value());
 	}
 
 	/**

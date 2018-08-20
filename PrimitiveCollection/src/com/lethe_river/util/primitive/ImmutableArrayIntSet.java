@@ -14,7 +14,7 @@ import java.util.function.IntConsumer;
  * @author YuyaAizawa
  *
  */
-public class ImmutableArrayIntSet extends AbstractIntSortedSet implements IntSortedSet {
+public class ImmutableArrayIntSet extends AbstractIntSortedSet {
 	private final int[] field;
 	private final int from;
 	private final int to;

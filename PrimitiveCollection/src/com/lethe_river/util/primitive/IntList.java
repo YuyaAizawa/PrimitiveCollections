@@ -177,9 +177,9 @@ public interface IntList extends PrimitiveList<Integer>, IntCollection {
 		PrimitiveIterator.OfInt i2 = list.iterator();
 
 		loop: while(i1.hasNext()) {
-			int t1 = i1.next();
+			int t1 = i1.nextInt();
 			while(i2.hasNext()) {
-				int t2 = i2.next();
+				int t2 = i2.nextInt();
 				if(t1 == t2) {
 					continue loop;
 				}

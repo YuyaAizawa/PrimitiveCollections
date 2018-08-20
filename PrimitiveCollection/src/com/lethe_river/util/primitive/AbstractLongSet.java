@@ -54,7 +54,7 @@ public abstract class AbstractLongSet extends AbstractLongCollection implements 
 				modified |= remove(i.nextLong());
 		} else {
 			for (PrimitiveIterator.OfLong i = iterator(); i.hasNext(); ) {
-				if (ls.contains(i.next())) {
+				if (ls.contains(i.nextLong())) {
 					i.remove();
 					modified = true;
 				}

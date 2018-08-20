@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
  * @author YuyaAizawa
  *
  */
-public class CuckooHashIntSet extends AbstractIntSet implements IntSet {
+public class CuckooHashIntSet extends AbstractIntSet {
 
 	private static final int DEFAULT_CAPACITY = 5;
 	private static final float DEFAULT_LOAD_FACTOR = 0.5f;
@@ -81,8 +81,8 @@ public class CuckooHashIntSet extends AbstractIntSet implements IntSet {
 			int buildId = modifyId;
 
 			// テーブル走査用
-			Iterator<Integer> iterator1 = new IntArrayIterator(table1);
-			Iterator<Integer> iterator2 = new IntArrayIterator(table2);
+			PrimitiveIterator.OfInt iterator1 = new ArrayIntIterator(table1);
+			PrimitiveIterator.OfInt iterator2 = new ArrayIntIterator(table2);
 
 			// nextで返した数
 			int replied = 0;
@@ -109,10 +109,10 @@ public class CuckooHashIntSet extends AbstractIntSet implements IntSet {
 
 				int value = 0;
 				while(value == 0 && iterator1.hasNext()){
-					value = iterator1.next();
+					value = iterator1.nextInt();
 				}
 				while(value == 0 && iterator2.hasNext()){
-					value = iterator2.next();
+					value = iterator2.nextInt();
 				}
 				if(value == 0) {
 					throw new NoSuchElementException();
@@ -120,26 +120,6 @@ public class CuckooHashIntSet extends AbstractIntSet implements IntSet {
 
 				replied++;
 				return value;
-			}
-
-			class IntArrayIterator implements Iterator<Integer> {
-				int[] array;
-				int index = 0;
-
-				public IntArrayIterator(int [] array) {
-					this.array = array;
-				}
-
-				@Override
-				public boolean hasNext() {
-					return index < array.length;
-				}
-
-				@Override
-				public Integer next() {
-					index++;
-					return array[index];
-				}
 			}
 		};
 	}

@@ -228,9 +228,8 @@ public abstract class AbstractByteList extends AbstractByteCollection implements
 	public ByteList subList(int fromIndex, int toIndex) {
 		if(this instanceof RandomAccess) {
 			return new RandomAccessSubList(this, fromIndex, toIndex);
-		} else {
-			return new SubList(this, fromIndex, toIndex);
 		}
+		return new SubList(this, fromIndex, toIndex);
 	}
 
 	@Override
@@ -350,18 +349,16 @@ public abstract class AbstractByteList extends AbstractByteCollection implements
 				public byte previousByte() {
 					if(hasPrevious()) {
 						return i.previousByte();
-					} else {
-						throw new NoSuchElementException();
 					}
+					throw new NoSuchElementException();
 				}
 
 				@Override
 				public byte nextByte() {
 					if(hasNext()) {
 						return i.nextByte();
-					} else {
-						throw new NoSuchElementException();
 					}
+					throw new NoSuchElementException();
 				}
 
 				@Override

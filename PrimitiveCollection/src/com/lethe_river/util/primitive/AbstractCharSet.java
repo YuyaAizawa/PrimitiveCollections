@@ -53,7 +53,7 @@ public abstract class AbstractCharSet extends AbstractCharCollection implements 
 				modified |= remove(i.nextChar());
 		} else {
 			for (CharIterator i = iterator(); i.hasNext(); ) {
-				if (chs.contains(i.next())) {
+				if (chs.contains(i.nextChar())) {
 					i.remove();
 					modified = true;
 				}

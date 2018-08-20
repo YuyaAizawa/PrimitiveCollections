@@ -16,7 +16,7 @@ public interface CharIterator extends PrimitiveIterator<Character, CharConsumer>
 
 	@Override
 	default Character next() {
-		return nextChar();
+		return Character.valueOf(nextChar());
 	}
 
 	@Override

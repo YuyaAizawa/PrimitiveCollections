@@ -126,7 +126,7 @@ final class PrimitiveSupport {
 	static Integer[] boxed(int[] array) {
 		Integer[] boxed = new Integer[array.length];
 		for (int i = 0; i < array.length; i++) {
-			boxed[i] = array[i];
+			boxed[i] = Integer.valueOf(array[i]);
 		}
 		return boxed;
 	}
@@ -134,7 +134,7 @@ final class PrimitiveSupport {
 	static Long[] boxed(long[] array) {
 		Long[] boxed = new Long[array.length];
 		for (int i = 0; i < array.length; i++) {
-			boxed[i] = array[i];
+			boxed[i] = Long.valueOf(array[i]);
 		}
 		return boxed;
 	}
@@ -142,7 +142,7 @@ final class PrimitiveSupport {
 	static Byte[] boxed(byte[] array) {
 		Byte[] boxed = new Byte[array.length];
 		for (int i = 0; i < array.length; i++) {
-			boxed[i] = array[i];
+			boxed[i] = Byte.valueOf(array[i]);
 		}
 		return boxed;
 	}
@@ -150,7 +150,7 @@ final class PrimitiveSupport {
 	static Double[] boxed(double[] array) {
 		Double[] boxed = new Double[array.length];
 		for (int i = 0; i < array.length; i++) {
-			boxed[i] = array[i];
+			boxed[i] = Double.valueOf(array[i]);
 		}
 		return boxed;
 	}
@@ -158,7 +158,7 @@ final class PrimitiveSupport {
 	static Character[] boxed(char[] array) {
 		Character[] boxed = new Character[array.length];
 		for (int i = 0; i < array.length; i++) {
-			boxed[i] = array[i];
+			boxed[i] = Character.valueOf(array[i]);
 		}
 		return boxed;
 	}

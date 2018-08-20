@@ -1,6 +1,5 @@
 package com.lethe_river.util.primitive;
 
-import java.io.Serializable;
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
@@ -34,7 +33,7 @@ import java.util.PrimitiveIterator;
  * HashSet        (byte): 64, 640, 5920, 56288, 272864, 545632
  * InsScatterTable(byte): 56, 152,  848,  6448,  51248, 102448
  */
-public final class ScatterIntSet extends AbstractIntSet implements IntSet, Serializable {
+public final class ScatterIntSet extends AbstractIntSet {
 	private static final long serialVersionUID = 5569547128406006928L;
 
 	// NULLをあらわす数字
@@ -205,9 +204,8 @@ public final class ScatterIntSet extends AbstractIntSet implements IntSet, Seria
 				hasNull = false;
 				size--;
 				return true;
-			} else {
-				return false;
 			}
+			return false;
 		}
 
 		if(field==EMPTY_DATA) {
@@ -245,13 +243,12 @@ public final class ScatterIntSet extends AbstractIntSet implements IntSet, Seria
 				field[dst] = NULL;
 				modCount++;
 				return;
-			} else {
-				int pos = hash(i) % field.length;
-				if((dst < src && pos <= dst)
-				|| (src < dst && (src < pos && pos <= dst))) {
-					field[dst] = i;
-					dst = src;
-				}
+			}
+			int pos = hash(i) % field.length;
+			if((dst < src && pos <= dst)
+			|| (src < dst && (src < pos && pos <= dst))) {
+				field[dst] = i;
+				dst = src;
 			}
 		}
 
@@ -320,7 +317,7 @@ public final class ScatterIntSet extends AbstractIntSet implements IntSet, Seria
 	 * @param j 要素
 	 * @return 要素のハッシュ(正数のint)
 	 */
-	private int hash(int j) {
+	private static int hash(int j) {
 		return Integer.MAX_VALUE & hashFunction.hash(j);
 	}
 
