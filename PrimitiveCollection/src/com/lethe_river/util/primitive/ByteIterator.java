@@ -25,7 +25,7 @@ public interface ByteIterator extends PrimitiveIterator<Byte, ByteConsumer> {
 
 	@Override
 	default Byte next() {
-		return nextByte();
+		return Byte.valueOf(nextByte());
 	}
 
 	@Override

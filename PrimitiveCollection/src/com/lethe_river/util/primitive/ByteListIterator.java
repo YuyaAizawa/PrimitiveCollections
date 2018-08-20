@@ -11,12 +11,12 @@ public interface ByteListIterator extends ListIterator<Byte>, ByteIterator {
 
 	@Override
 	default Byte next() {
-		return nextByte();
+		return Byte.valueOf(nextByte());
 	}
 
 	@Override
 	default Byte previous() {
-		return previousByte();
+		return Byte.valueOf(previousByte());
 	}
 
 	@Override

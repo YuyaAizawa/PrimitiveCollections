@@ -53,7 +53,7 @@ public abstract class AbstractByteSet extends AbstractByteCollection implements 
 				modified |= remove(i.nextByte());
 		} else {
 			for (ByteIterator i = iterator(); i.hasNext(); ) {
-				if (bs.contains(i.next())) {
+				if (bs.contains(i.nextByte())) {
 					i.remove();
 					modified = true;
 				}

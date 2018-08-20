@@ -13,7 +13,7 @@ import java.util.function.IntConsumer;
  * @author YuyaAizawa
  *
  */
-public class ImmutableArrayByteSet extends AbstractByteSortedSet implements ByteSortedSet {
+public class ImmutableArrayByteSet extends AbstractByteSortedSet {
 	private final byte[] field;
 	private final int from;
 	private final int to;
@@ -133,7 +133,7 @@ public class ImmutableArrayByteSet extends AbstractByteSortedSet implements Byte
 			containsAll((ByteSortedSet)bs);
 		}
 		for(ByteIterator i = bs.iterator(); i.hasNext();) {
-			if(!contains(i.next())) {
+			if(!contains(i.nextByte())) {
 				return false;
 			}
 		}

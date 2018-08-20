@@ -184,9 +184,8 @@ public abstract class AbstractIntList extends AbstractIntCollection implements I
 	public IntList subList(int fromIndex, int toIndex) {
 		if(this instanceof RandomAccess) {
 			return new RandomAccessSubList(this, fromIndex, toIndex);
-		} else {
-			return new SubList(this, fromIndex, toIndex);
 		}
+		return new SubList(this, fromIndex, toIndex);
 	}
 
 	@Override
@@ -306,18 +305,16 @@ class SubList extends AbstractIntList {
 			public int previousInt() {
 				if(hasPrevious()) {
 					return i.previousInt();
-				} else {
-					throw new NoSuchElementException();
 				}
+				throw new NoSuchElementException();
 			}
 
 			@Override
 			public int nextInt() {
 				if(hasNext()) {
 					return i.nextInt();
-				} else {
-					throw new NoSuchElementException();
 				}
+				throw new NoSuchElementException();
 			}
 
 			@Override

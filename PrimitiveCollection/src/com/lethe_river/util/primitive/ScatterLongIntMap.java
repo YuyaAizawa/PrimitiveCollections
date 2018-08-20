@@ -242,9 +242,8 @@ public final class ScatterLongIntMap implements LongIntMap {
 				nullKey = false;
 				size--;
 				return true;
-			} else {
-				return false;
 			}
+			return false;
 		}
 
 		if(keys==EMPTY_KEYS) {
@@ -281,14 +280,13 @@ public final class ScatterLongIntMap implements LongIntMap {
 			if(i == NULL || src == index) {
 				keys[dst] = NULL;
 				return;
-			} else {
-				int pos = hash(i) % keys.length;
-				if((dst < src && pos <= dst)
-				|| (src < dst && (src < pos && pos <= dst))) {
-					keys[dst] = i;
-					values[dst] = values[src];
-					dst = src;
-				}
+			}
+			int pos = hash(i) % keys.length;
+			if((dst < src && pos <= dst)
+			|| (src < dst && (src < pos && pos <= dst))) {
+				keys[dst] = i;
+				values[dst] = values[src];
+				dst = src;
 			}
 		}
 	}
@@ -368,7 +366,7 @@ public final class ScatterLongIntMap implements LongIntMap {
 	 * @param j 要素
 	 * @return 要素のハッシュ(正数のint)
 	 */
-	private int hash(long l) {
+	private static int hash(long l) {
 		return Integer.MAX_VALUE & ((int)(l^(l>>>32)));
 	}
 
