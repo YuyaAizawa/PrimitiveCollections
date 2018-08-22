@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 public interface ByteListIterator extends ListIterator<Byte>, ByteIterator {
 	@Override
 	default void add(Byte e) {
-		add((byte)e);
+		add(e.byteValue());
 	}
 
 	@Override
@@ -21,7 +21,7 @@ public interface ByteListIterator extends ListIterator<Byte>, ByteIterator {
 
 	@Override
 	default void set(Byte e) {
-		set((byte)e);
+		set(e.byteValue());
 	}
 
 	/**

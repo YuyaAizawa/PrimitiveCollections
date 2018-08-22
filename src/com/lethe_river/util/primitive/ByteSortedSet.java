@@ -59,6 +59,11 @@ public interface ByteSortedSet extends ByteSet {
 	 */
 	ByteSortedSet tailSet(byte from);
 
+	/**
+	 * この順序付集合のSortedSet&lt;Byte&gt;のビューを返す.
+	 * ビューに対する操作はこのインタンスに反映される．
+	 * @return このByteSortedSetのSortedSet&lt;Byte&gt;のビュー
+	 */
 	@Override
-	public SortedSet<Byte> boxedView();
+	SortedSet<Byte> boxedView();
 }

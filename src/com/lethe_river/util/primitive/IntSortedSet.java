@@ -1,10 +1,7 @@
 package com.lethe_river.util.primitive;
 
-import java.util.Collection;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.SortedSet;
 
 /**
@@ -62,107 +59,11 @@ public interface IntSortedSet extends IntSet {
 	 */
 	IntSortedSet tailSet(int from);
 
+	/**
+	 * この順序付集合のSortedSet&lt;Integer&gt;のビューを返す.
+	 * ビューに対する操作はこのインタンスに反映される．
+	 * @return このIntSortedSetのSortedSet&lt;Integer&gt;のビュー
+	 */
 	@Override
-	public default SortedSet<Integer> boxedView() {
-		Set<Integer> setWrapper = boxedView();
-		return new SortedSet<>() {
-			@Override
-			public int size() {
-				return IntSortedSet.this.size();
-			}
-
-			@Override
-			public boolean isEmpty() {
-				return IntSortedSet.this.isEmpty();
-			}
-
-			@Override
-			public boolean contains(Object o) {
-				if(!(o instanceof Integer)) {
-					return false;
-				}
-				return IntSortedSet.this.contains((int)o);
-			}
-
-			@Override
-			public Iterator<Integer> iterator() {
-				return IntSortedSet.this.iterator();
-			}
-
-			@Override
-			public Object[] toArray() {
-				return setWrapper.toArray();
-			}
-
-			@Override
-			public <T> T[] toArray(T[] a) {
-				return setWrapper.toArray(a);
-			}
-
-			@Override
-			public boolean add(Integer e) {
-				return setWrapper.add(e);
-			}
-
-			@Override
-			public boolean remove(Object o) {
-				return setWrapper.remove(o);
-			}
-
-			@Override
-			public boolean containsAll(Collection<?> c) {
-				return setWrapper.containsAll(c);
-			}
-
-			@Override
-			public boolean addAll(Collection<? extends Integer> c) {
-				return setWrapper.addAll(c);
-			}
-
-			@Override
-			public boolean retainAll(Collection<?> c) {
-				return setWrapper.retainAll(c);
-			}
-
-			@Override
-			public boolean removeAll(Collection<?> c) {
-				return setWrapper.removeAll(c);
-			}
-
-			@Override
-			public void clear() {
-				setWrapper.clear();
-			}
-
-			@Override
-			public Comparator<? super Integer> comparator() {
-				return (x, y) -> Integer.compare(x, y);
-			}
-
-			@Override
-			public SortedSet<Integer> subSet(Integer fromElement, Integer toElement) {
-				return IntSortedSet.this.subSet(fromElement, toElement).boxedView();
-			}
-
-			@Override
-			public SortedSet<Integer> headSet(Integer toElement) {
-				return IntSortedSet.this.headSet(toElement).boxedView();
-			}
-
-			@Override
-			public SortedSet<Integer> tailSet(Integer fromElement) {
-				return IntSortedSet.this.tailSet(fromElement).boxedView();
-			}
-
-			@Override
-			public Integer first() {
-				return IntSortedSet.this.first();
-			}
-
-			@Override
-			public Integer last() {
-				return IntSortedSet.this.last();
-			}
-		};
-	}
+	SortedSet<Integer> boxedView();
 }

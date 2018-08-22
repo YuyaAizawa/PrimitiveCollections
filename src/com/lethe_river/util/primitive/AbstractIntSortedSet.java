@@ -6,7 +6,7 @@ public abstract class AbstractIntSortedSet extends AbstractIntSet implements Int
 
 	@Override
 	public SortedSet<Integer> boxedView() {
-		return IntSortedSet.super.boxedView();
+		return PrimitiveSupport.boxed(this);
 	}
 
 	@Override

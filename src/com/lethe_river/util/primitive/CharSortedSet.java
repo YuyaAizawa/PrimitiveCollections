@@ -1,10 +1,7 @@
 package com.lethe_river.util.primitive;
 
-import java.util.Collection;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.SortedSet;
 
 /**
@@ -61,107 +58,11 @@ public interface CharSortedSet extends CharSet {
 	 */
 	CharSortedSet tailSet(char from);
 
+	/**
+	 * この順序付集合のSortedSet&lt;Character&gt;のビューを返す.
+	 * ビューに対する操作はこのインタンスに反映される．
+	 * @return このCharSortedSetのSortedSet&lt;Character&gt;のビュー
+	 */
 	@Override
-	public default SortedSet<Character> boxedView() {
-		Set<Character> setWrapper = boxedView();
-		return new SortedSet<>() {
-			@Override
-			public int size() {
-				return CharSortedSet.this.size();
-			}
-
-			@Override
-			public boolean isEmpty() {
-				return CharSortedSet.this.isEmpty();
-			}
-
-			@Override
-			public boolean contains(Object o) {
-				if(!(o instanceof Character)) {
-					return false;
-				}
-				return CharSortedSet.this.contains((char)o);
-			}
-
-			@Override
-			public Iterator<Character> iterator() {
-				return CharSortedSet.this.iterator();
-			}
-
-			@Override
-			public Object[] toArray() {
-				return setWrapper.toArray();
-			}
-
-			@Override
-			public <T> T[] toArray(T[] a) {
-				return setWrapper.toArray(a);
-			}
-
-			@Override
-			public boolean add(Character e) {
-				return setWrapper.add(e);
-			}
-
-			@Override
-			public boolean remove(Object o) {
-				return setWrapper.remove(o);
-			}
-
-			@Override
-			public boolean containsAll(Collection<?> c) {
-				return setWrapper.containsAll(c);
-			}
-
-			@Override
-			public boolean addAll(Collection<? extends Character> c) {
-				return setWrapper.addAll(c);
-			}
-
-			@Override
-			public boolean retainAll(Collection<?> c) {
-				return setWrapper.retainAll(c);
-			}
-
-			@Override
-			public boolean removeAll(Collection<?> c) {
-				return setWrapper.removeAll(c);
-			}
-
-			@Override
-			public void clear() {
-				setWrapper.clear();
-			}
-
-			@Override
-			public Comparator<? super Character> comparator() {
-				return (x, y) -> Character.compare(x, y);
-			}
-
-			@Override
-			public SortedSet<Character> subSet(Character fromElement, Character toElement) {
-				return CharSortedSet.this.subSet(fromElement, toElement).boxedView();
-			}
-
-			@Override
-			public SortedSet<Character> headSet(Character toElement) {
-				return CharSortedSet.this.headSet(toElement).boxedView();
-			}
-
-			@Override
-			public SortedSet<Character> tailSet(Character fromElement) {
-				return CharSortedSet.this.tailSet(fromElement).boxedView();
-			}
-
-			@Override
-			public Character first() {
-				return CharSortedSet.this.first();
-			}
-
-			@Override
-			public Character last() {
-				return CharSortedSet.this.last();
-			}
-		};
-	}
+	SortedSet<Character> boxedView();
 }

@@ -81,8 +81,8 @@ public class CuckooHashIntSet extends AbstractIntSet {
 			int buildId = modifyId;
 
 			// テーブル走査用
-			PrimitiveIterator.OfInt iterator1 = new ArrayIntIterator(table1);
-			PrimitiveIterator.OfInt iterator2 = new ArrayIntIterator(table2);
+			PrimitiveIterator.OfInt iterator1 = ArrayIterator.of(table1);
+			PrimitiveIterator.OfInt iterator2 = ArrayIterator.of(table2);
 
 			// nextで返した数
 			int replied = 0;

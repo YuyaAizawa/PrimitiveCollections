@@ -13,22 +13,22 @@ public interface IntListIterator extends ListIterator<Integer>, PrimitiveIterato
 
 	@Override
 	default void add(Integer e) {
-		add((int)e);
+		add(e.intValue());
 	}
 
 	@Override
 	default Integer next() {
-		return nextInt();
+		return Integer.valueOf(nextInt());
 	}
 
 	@Override
 	default Integer previous() {
-		return previousInt();
+		return Integer.valueOf(previousInt());
 	}
 
 	@Override
 	default void set(Integer e) {
-		set((int)e);
+		set(e.intValue());
 	}
 
 	/**

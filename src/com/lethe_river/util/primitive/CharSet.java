@@ -132,9 +132,9 @@ public interface CharSet extends PrimitiveSet<Character>, CharCollection {
 	}
 
 	/**
-	 * このコレクションのSet&lt;Integer&gt;のビューを返す.
+	 * このコレクションのSet&lt;Character&gt;のビューを返す.
 	 * ビューに対する操作はこのインタンスに反映される．
-	 * @return このIntSetのSet&lt;Integer&gt;のビュー
+	 * @return このCharSetのSet&lt;Character&gt;のビュー
 	 */
 	@Override
 	Set<Character> boxedView();

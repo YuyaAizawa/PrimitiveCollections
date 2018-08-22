@@ -48,7 +48,7 @@ public class ImmutableArrayIntSet extends AbstractIntSortedSet {
 	 */
 	public static ImmutableArrayIntSet of(Set<Integer> set) {
 		return new ImmutableArrayIntSet(set.stream()
-				.mapToInt(i -> i)
+				.mapToInt(Integer::intValue)
 				.sorted()
 				.toArray());
 	}

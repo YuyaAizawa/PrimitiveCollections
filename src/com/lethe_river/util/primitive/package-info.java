@@ -64,4 +64,13 @@ package com.lethe_river.util.primitive;
  *     Entryを取り出す部分(boxedやらspliteratorやら)でオブジェクトを遅延生成
  *       標準ライブラリでは取り出したエントリは元のマップの変更に追従する
  *       互換性が保てないため，マップ系はboxedなしにするか
+ *
+ * 生成方法はクラスメソッドかnewか
+ *   of(クラスメソッド)だとArrayIntList.ofとなって英語に近い
+ *   newだとヒープの確保が明示的
+ *
+ * プリミティブのListIteratorはjava.utilを継承すべきか
+ *   無いほうがシンプル
+ *   あったほうが標準ライブラリへのラッパーコードが減る
+ *   積極的になくす理由はない
  */

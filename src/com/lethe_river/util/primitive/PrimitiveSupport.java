@@ -170,13 +170,16 @@ final class PrimitiveSupport {
 	static List<Integer> boxed(IntList original) {
 		if(original instanceof RandomAccess) {
 			return new BoxedIntListRandomAccess(original);
-		} else {
-			return new BoxedIntList(original);
 		}
+		return new BoxedIntList(original);
 	}
 
 	static Set<Integer> boxed(IntSet original) {
 		return new BoxedIntSet(original);
+	}
+
+	static SortedSet<Integer> boxed(IntSortedSet original) {
+		return new BoxedIntSortedSet(original);
 	}
 
 	static Collection<Long> boxed(LongCollection original) {
@@ -185,6 +188,10 @@ final class PrimitiveSupport {
 
 	static Set<Long> boxed(LongSet original) {
 		return new BoxedLongSet(original);
+	}
+
+	static SortedSet<Long> boxed(LongSortedSet original) {
+		return new BoxedLongSortedSet(original);
 	}
 
 	static Collection<Byte> boxed(ByteCollection original) {
@@ -209,6 +216,10 @@ final class PrimitiveSupport {
 
 	static Set<Character> boxed(CharSet original) {
 		return new BoxedCharSet(original);
+	}
+
+	static SortedSet<Character> boxed(CharSortedSet original) {
+		return new BoxedCharSortedSet(original);
 	}
 
 	static Spliterator<Byte> toByte(Spliterator<? extends Integer> signed) {
@@ -1001,6 +1012,46 @@ final class PrimitiveSupport {
 		}
 	}
 
+	private static class BoxedIntSortedSet extends BoxedIntSet implements SortedSet<Integer> {
+
+		BoxedIntSortedSet(IntSortedSet original) {
+			super(original);
+			this.original = original;
+		}
+
+		private final IntSortedSet original;
+
+		@Override
+		public Comparator<? super Integer> comparator() {
+			return Comparator.naturalOrder();
+		}
+
+		@Override
+		public SortedSet<Integer> subSet(Integer from, Integer to) {
+			return boxed(original.subSet(from, to));
+		}
+
+		@Override
+		public SortedSet<Integer> headSet(Integer to) {
+			return boxed(original.headSet(to));
+		}
+
+		@Override
+		public SortedSet<Integer> tailSet(Integer from) {
+			return boxed(original.tailSet(from));
+		}
+
+		@Override
+		public Integer first() {
+			return original.first();
+		}
+
+		@Override
+		public Integer last() {
+			return original.last();
+		}
+	}
+
 	private static class BoxedLongCollection implements Collection<Long> {
 		final LongCollection original;
 
@@ -1196,6 +1247,46 @@ final class PrimitiveSupport {
 		@Override
 		public Spliterator<Long> spliterator() {
 			return original.spliterator();
+		}
+	}
+
+	private static class BoxedLongSortedSet extends BoxedLongSet implements SortedSet<Long> {
+
+		BoxedLongSortedSet(LongSortedSet original) {
+			super(original);
+			this.original = original;
+		}
+
+		private final LongSortedSet original;
+
+		@Override
+		public Comparator<? super Long> comparator() {
+			return Comparator.naturalOrder();
+		}
+
+		@Override
+		public SortedSet<Long> subSet(Long from, Long to) {
+			return boxed(original.subSet(from, to));
+		}
+
+		@Override
+		public SortedSet<Long> headSet(Long to) {
+			return boxed(original.headSet(to));
+		}
+
+		@Override
+		public SortedSet<Long> tailSet(Long from) {
+			return boxed(original.tailSet(from));
+		}
+
+		@Override
+		public Long first() {
+			return original.first();
+		}
+
+		@Override
+		public Long last() {
+			return original.last();
 		}
 	}
 
@@ -1807,6 +1898,46 @@ final class PrimitiveSupport {
 		@Override
 		public Spliterator<Character> spliterator() {
 			return toChar(original.spliterator());
+		}
+	}
+
+	private static class BoxedCharSortedSet extends BoxedCharSet implements SortedSet<Character> {
+
+		BoxedCharSortedSet(CharSortedSet original) {
+			super(original);
+			this.original = original;
+		}
+
+		private final CharSortedSet original;
+
+		@Override
+		public Comparator<? super Character> comparator() {
+			return Comparator.naturalOrder();
+		}
+
+		@Override
+		public SortedSet<Character> subSet(Character from, Character to) {
+			return boxed(original.subSet(from, to));
+		}
+
+		@Override
+		public SortedSet<Character> headSet(Character to) {
+			return boxed(original.headSet(to));
+		}
+
+		@Override
+		public SortedSet<Character> tailSet(Character from) {
+			return boxed(original.tailSet(from));
+		}
+
+		@Override
+		public Character first() {
+			return original.first();
+		}
+
+		@Override
+		public Character last() {
+			return original.last();
 		}
 	}
 

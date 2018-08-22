@@ -9,7 +9,7 @@ public interface IntIntBiFunction<R> extends BiFunction<Integer, Integer, R>, Fu
 
 	@Override
 	default R apply(Integer t, Integer u) {
-		return apply((int)t, (int)u);
+		return apply(t.intValue(), u.intValue());
 	}
 
 	@Override
