@@ -1,5 +1,8 @@
 package com.lethe_river.util.primitive;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
@@ -13,6 +16,8 @@ import java.util.RandomAccess;
  *
  */
 public final class ArrayByteList extends AbstractByteList implements RandomAccess {
+
+	private static final long serialVersionUID = -1268344803729165353L;
 
 	private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE >> 1;
 
@@ -190,6 +195,21 @@ public final class ArrayByteList extends AbstractByteList implements RandomAcces
 			int newCap = Math.min(Math.max(minCapacity, recommend), MAX_ARRAY_SIZE);
 
 			field = Arrays.copyOf(field, newCap);
+		}
+	}
+
+	private void writeObject(ObjectOutputStream oos) throws IOException {
+		oos.writeInt(size);
+		for (int i = 0; i < size; i++) {
+			oos.writeInt(field[i]);
+		}
+	}
+
+	private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+		size = ois.readInt();
+		field = new byte[size];
+		for (int i = 0; i < size; i++) {
+			field[i] = ois.readByte();
 		}
 	}
 

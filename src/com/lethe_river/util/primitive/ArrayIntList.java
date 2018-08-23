@@ -1,5 +1,8 @@
 package com.lethe_river.util.primitive;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
@@ -13,6 +16,8 @@ import java.util.RandomAccess;
  *
  */
 public final class ArrayIntList extends AbstractIntList implements RandomAccess {
+
+	private static final long serialVersionUID = 3231433501689654601L;
 
 	private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE >> 1;
 
@@ -195,6 +200,21 @@ public final class ArrayIntList extends AbstractIntList implements RandomAccess 
 	@Override
 	public IntListIterator listIterator(int i) {
 		return new ArrayListIterator(i);
+	}
+
+	private void writeObject(ObjectOutputStream oos) throws IOException {
+		oos.writeInt(size);
+		for (int i = 0; i < size; i++) {
+			oos.writeInt(field[i]);
+		}
+	}
+
+	private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+		size = ois.readInt();
+		field = new int[size];
+		for (int i = 0; i < size; i++) {
+			field[i] = ois.readInt();
+		}
 	}
 
 	private class ArrayListIterator implements IntListIterator {
