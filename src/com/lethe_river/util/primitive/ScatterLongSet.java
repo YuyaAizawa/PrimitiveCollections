@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 
 /**
- * scatter tableを用いたIntSetの実装
+ * scatter tableを用いたLongSetの実装
  *
  * - open address
  * - prime number bucket
@@ -15,38 +15,21 @@ import java.util.PrimitiveIterator;
  * @author YuyaAizawa
  *
  */
-/*
- * 参考までにHashSet&lt;Integerとの&gt;性能比較
- *
- * 時間
- *
- * HashSet<Integer> : 139760 usec/(1 new + 1M add)
- * IntScatterTable  :  36260 usec/(1 new + 1M add)
- *
- * HashSet<Integer> :  51320 usec/1M contains
- * IntScatterTable  :  23070 usec/1M contains
- *
- *
- * 空間
- *
- * entry size           :  0,  10,  100,  1000,   5000,  10000
- * HashSet        (byte): 64, 640, 5920, 56288, 272864, 545632
- * InsScatterTable(byte): 56, 152,  848,  6448,  51248, 102448
- */
-public final class ScatterIntSet extends AbstractIntSet {
-	private static final long serialVersionUID = 5569547128406006928L;
+
+public final class ScatterLongSet extends AbstractLongSet {
+
 
 	// NULLをあらわす数字
-	private static final int NULL = 0;
+	private static final long NULL = 0;
 
 	private static final int DEFAULT_INIT_CAPACITY = 11;
 	private static final float DEFAULT_LOAD_FACTOR = 0.75f;
 	private static final int MAX_CAPACITY = 1<<30;
 
-	private static final int[] EMPTY_DATA = {};
+	private static final long[] EMPTY_DATA = {};
 
 	// NULL以外の要素を入れる配列
-	private int [] field;
+	private long [] field;
 
 	// NULLで使われている数字を含むか
 	private boolean hasNull;
@@ -64,19 +47,19 @@ public final class ScatterIntSet extends AbstractIntSet {
 	private int modCount;
 
 	/**
-	 * 初期容量と負荷係数を指定してIntScatterTableを生成する.
+	 * 初期容量と負荷係数を指定してScatterLongSetを生成する.
 	 *
 	 * @param initCapacity 初期容量
 	 * @param loadFactor 負荷係数
 	 */
-	public ScatterIntSet(int initCapacity, float loadFactor) {
+	public ScatterLongSet(int initCapacity, float loadFactor) {
 		if(initCapacity < 0) {
 			throw new IllegalArgumentException("initCapacity must be positive :"+initCapacity);
 		}
 
 		field = initCapacity == 0 ?
 				EMPTY_DATA :
-				new int[initCapacity];
+				new long[initCapacity];
 		hasNull = false;
 		size = 0;
 		this.loadFactor = loadFactor;
@@ -85,19 +68,19 @@ public final class ScatterIntSet extends AbstractIntSet {
 	}
 
 	/**
-	 * 初期容量を指定してIntScatterTableを生成する.
+	 * 初期容量を指定してScatterLongSetを生成する.
 	 *
 	 * 負荷係数はデフォルトの値(0.75)が用いられる
 	 * @param initCapacity 初期容量
 	 */
-	public ScatterIntSet(int initCapacity) {
+	public ScatterLongSet(int initCapacity) {
 		this(initCapacity, DEFAULT_LOAD_FACTOR);
 	}
 
 	/**
-	 * デフォルトの初期容量(11)と負荷係数を利用してIntScatterTableを生成する.
+	 * デフォルトの初期容量(11)と負荷係数を利用してScatterLongSetを生成する.
 	 */
-	public ScatterIntSet() {
+	public ScatterLongSet() {
 		field = EMPTY_DATA;
 		hasNull = false;
 		size = 0;
@@ -107,12 +90,12 @@ public final class ScatterIntSet extends AbstractIntSet {
 	}
 
 	/**
-	 * 指定されたIntSetの内容をコピーする.
+	 * 指定されたLongSetの内容をコピーする.
 	 * 付加係数はデフォルトの値(0.75)，
 	 * 初期容量はオリジナルのIntSetが拡張なしに入る値となる．
 	 * @param original
 	 */
-	public ScatterIntSet(IntSet original) {
+	public ScatterLongSet(LongSet original) {
 		this(0);
 		try {
 			ensureCapacity(original.size());
@@ -126,7 +109,7 @@ public final class ScatterIntSet extends AbstractIntSet {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean contains(int i) {
+	public boolean contains(long i) {
 		if(i == NULL) {
 			return hasNull;
 		}
@@ -143,7 +126,7 @@ public final class ScatterIntSet extends AbstractIntSet {
 			if(index == field.length) {
 				index = 0;
 			}
-			int j = field[index];
+			long j = field[index];
 			if(j == i) {
 				return true;
 			}
@@ -158,7 +141,7 @@ public final class ScatterIntSet extends AbstractIntSet {
 	 * {@inheritDoc}}
 	 */
 	@Override
-	public boolean add(int i) {
+	public boolean add(long i) {
 
 		if(i == NULL) {
 			if(!hasNull) {
@@ -179,7 +162,7 @@ public final class ScatterIntSet extends AbstractIntSet {
 			if(index == field.length) {
 				index = 0;
 			}
-			int j = field[index];
+			long j = field[index];
 			if(j == i) {
 				return false;
 			}
@@ -192,11 +175,11 @@ public final class ScatterIntSet extends AbstractIntSet {
 	}
 
 	/**
-	 * 指定されたint値をこのコレクションから削除する
+	 * 指定されたlong値をこのコレクションから削除する
 	 * @return 指定された要素を保持していればtrue
 	 */
 	@Override
-	public boolean remove(int i) {
+	public boolean remove(long i) {
 		if(i == NULL) {
 			if(hasNull) {
 				hasNull = false;
@@ -213,7 +196,7 @@ public final class ScatterIntSet extends AbstractIntSet {
 			if(index == field.length) {
 				index = 0;
 			}
-			int j = field[index];
+			long j = field[index];
 			if(j == i) {
 				pull(index);
 				size--;
@@ -236,7 +219,7 @@ public final class ScatterIntSet extends AbstractIntSet {
 			if(src == field.length) {
 				src = 0;
 			}
-			int i = field[src];
+			long i = field[src];
 			if(i == NULL || src == index) {
 				field[dst] = NULL;
 				modCount++;
@@ -249,25 +232,24 @@ public final class ScatterIntSet extends AbstractIntSet {
 				dst = src;
 			}
 		}
-
 	}
 
 	/**
-	 * 指定されたIntSetに含まれる値をこのコレクションに追加する
-	 * @param is 追加するint値の入ったIntSet
+	 * 指定されたLongSetに含まれる値をこのコレクションに追加する
+	 * @param ls 追加するlong値の入ったLongSet
 	 */
-	public void add(IntSet is) {
+	public void add(LongSet ls) {
 		try {
-			ensureCapacity(is.size());
+			ensureCapacity(ls.size());
 		} catch(IllegalArgumentException e) {
 			throw new  RuntimeException("Too many entries!");
 		}
-		is.forEach(i -> add(i));
+		ls.forEach(l -> add(l));
 	}
 
 	/**
-	 * 指定した容量を格納できるようこのIntScatterTableの内部配列を拡張する.
-	 * @param minCapasity 保持するint値の数
+	 * 指定した容量を格納できるようこのScatterLongSetの内部配列を拡張する.
+	 * @param minCapasity 保持するlong値の数
 	 * @throws IllegalArgumentException minCapacityが[1, MAX_CAPACITY]の範囲外だったとき
 	 */
 	public void ensureCapacity(int minCapasity) {
@@ -288,9 +270,9 @@ public final class ScatterIntSet extends AbstractIntSet {
 	}
 
 	private void rehash(int nextCapacity) {
-		int[] tmp = new int[nextCapacity];
+		long[] tmp = new long[nextCapacity];
 		for (int i = 0; i < field.length; i++) {
-			int j = field[i];
+			long j = field[i];
 			if(j == NULL) {
 				continue;
 			}
@@ -311,12 +293,12 @@ public final class ScatterIntSet extends AbstractIntSet {
 
 	/**
 	 * 要素のScatterTable上での位置を決めるためのhashを返す．
-	 * {@link ScatterIntSet#hashCode()}とは無関係
-	 * @param j 要素
+	 * {@link ScatterLongSet#hashCode()}とは無関係
+	 * @param i 要素
 	 * @return 要素のハッシュ(正数のint)
 	 */
-	private static int hash(int j) {
-		return Integer.MAX_VALUE & HashSupport.thomasMueller(j);
+	private static int hash(long i) {
+		return Integer.MAX_VALUE & ((int) HashSupport.thomasMueller(i));
 	}
 
 	/**
@@ -333,10 +315,10 @@ public final class ScatterIntSet extends AbstractIntSet {
 	 * 列挙に必要な計算量はIntSetの容量に比例する．
 	 */
 	@Override
-	public PrimitiveIterator.OfInt iterator() {
+	public PrimitiveIterator.OfLong iterator() {
 
 		// 1つ目は0を返す
-		return new PrimitiveIterator.OfInt() {
+		return new PrimitiveIterator.OfLong() {
 
 			int index = 0;
 
@@ -351,7 +333,7 @@ public final class ScatterIntSet extends AbstractIntSet {
 
 			// removeが行える状態
 			boolean removable = false;
-			int removeTarget = NULL;
+			long removeTarget = NULL;
 
 			@Override
 			public boolean hasNext() {
@@ -359,7 +341,7 @@ public final class ScatterIntSet extends AbstractIntSet {
 			}
 
 			@Override
-			public int nextInt() {
+			public long nextLong() {
 				if(expectedModCount != modCount) {
 					throw new ConcurrentModificationException();
 				}
@@ -371,7 +353,7 @@ public final class ScatterIntSet extends AbstractIntSet {
 				}
 				try {
 					for(;;) {
-						int retVal = field[index++];
+						long retVal = field[index++];
 						if(retVal != NULL) {
 							replied++;
 							removable = true;
@@ -392,7 +374,7 @@ public final class ScatterIntSet extends AbstractIntSet {
 				if(!removable) {
 					throw new IllegalStateException();
 				}
-				ScatterIntSet.this.remove(removeTarget);
+				ScatterLongSet.this.remove(removeTarget);
 				expectedModCount = modCount;
 				removed++;
 				removable = false;

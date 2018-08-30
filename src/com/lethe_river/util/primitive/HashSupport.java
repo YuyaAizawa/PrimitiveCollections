@@ -44,7 +44,6 @@ public class HashSupport {
 		throw new IllegalArgumentException();
 	}
 
-	private static final int pc2357[] = {6, 2, 4, 2, 4, 6, 4, 2};
 	/**
 	 * 入力より大きい擬似素数を返す.
 	 * 返される値は入力より大きい最小の素数以下の数であり，2, 3, 5, 7で割り切れない．
@@ -84,19 +83,14 @@ public class HashSupport {
 		return i;
 	}
 
-	public static IntIntHash hash32shift() {
-		return new IntIntHash() {
-			@Override
-			public int hash(int i) {
-				i = ~i + (i << 15); // key = (key << 15) - key - 1;
-				i = i ^ (i >>> 12);
-				i = i + (i << 2);
-				i = i ^ (i >>> 4);
-				i = i * 2057; // key = (key + (key << 3)) + (key << 11);
-				i = i ^ (i >>> 16);
-				return i;
-			}
-		};
+	public static int hash32shift(int i) {
+		i = ~i + (i << 15); // key = (key << 15) - key - 1;
+		i = i ^ (i >>> 12);
+		i = i + (i << 2);
+		i = i ^ (i >>> 4);
+		i = i * 2057; // key = (key + (key << 3)) + (key << 11);
+		i = i ^ (i >>> 16);
+			return i;
 	}
 
 	/**
@@ -104,53 +98,48 @@ public class HashSupport {
 	 * @param salt 素数若しくは奇数
 	 * @return
 	 */
-
-	public static IntIntHash hash32shiftmult(int salt) {
-		return new IntIntHash() {
-			@Override
-			public int hash(int i) {
-				i = (i ^ 61) ^ (i >>> 16);
-				i += i << 3;
-				i ^= i >>> 4;
-				i *= salt;
-				i ^= i >>> 15;
-				return i;
-			}
-		};
-	}
-	public static IntIntHash hash32shiftmult() {
-		return hash32shiftmult(0x27d4eb2d);
+	public static int hash32shiftmult(int salt, int i) {
+		i = (i ^ 61) ^ (i >>> 16);
+		i += i << 3;
+		i ^= i >>> 4;
+		i *= salt;
+		i ^= i >>> 15;
+		return i;
 	}
 
-	public static IntIntHash robertJenkins() {
-		return new IntIntHash() {
-			@Override
-			public int hash(int i) {
-				i = (i+0x7ed55d16) + (i<<12);
-				i = (i^0xc761c23c) ^ (i>>>19);
-				i = (i+0x165667b1) + (i<<5);
-				i = (i+0xd3a2646c) ^ (i<<9);
-				i = (i+0xfd7046c5) + (i<<3);
-				i = (i^0xb55a4f09) ^ (i>>>16);
-				return i;
-			}
-		};
+	public static int hash32shiftmult(int i) {
+		return hash32shiftmult(0x27d4eb2d, i);
+	}
+
+	public static int robertJenkins(int i) {
+		i = (i+0x7ed55d16) + (i<<12);
+		i = (i^0xc761c23c) ^ (i>>>19);
+		i = (i+0x165667b1) + (i<<5);
+		i = (i+0xd3a2646c) ^ (i<<9);
+		i = (i+0xfd7046c5) + (i<<3);
+		i = (i^0xb55a4f09) ^ (i>>>16);
+		return i;
 	}
 
 	/*
 	 *  Thomas Muellerの成果
 	 *  入力1bitの差が出力1bitを変化させる可能性が等しいらしい
 	 */
-	public static IntIntHash thomasMueller() {
-		return new IntIntHash() {
-			@Override
-			public int hash(int x) {
-				x = ((x >>> 16) ^ x) * 0x45d9f3b;
-				x = ((x >>> 16) ^ x) * 0x45d9f3b;
-				x = (x >>> 16) ^ x;
-				return x;
-			}
-		};
+	public static int thomasMueller(int x) {
+		x = ((x >>> 16) ^ x) * 0x45d9f3b;
+		x = ((x >>> 16) ^ x) * 0x45d9f3b;
+		x =  (x >>> 16) ^ x;
+		return x;
+	}
+
+	/*
+	 *  Thomas Muellerの成果(64bit版)
+	 */
+	public static long thomasMueller(long x) {
+		x = (x ^ (x >>> 30)) * 0xbf58476d1ce4e5b9L;
+		x = (x ^ (x >>> 27)) * 0x94d049bb133111ebL;
+		x =  x ^ (x >>> 31);
+		return x;
 	}
 
 	private static final int[] primes1 = {
@@ -226,4 +215,6 @@ public class HashSupport {
 			379625062 + 21,
 			759250124 + 9
 	};
+
+private static final int pc2357[] = {6, 2, 4, 2, 4, 6, 4, 2};
 }

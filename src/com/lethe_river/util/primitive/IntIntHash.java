@@ -5,7 +5,7 @@ package com.lethe_river.util.primitive;
  * @author YuyaAizawa
  *
  */
-
+@FunctionalInterface
 public interface IntIntHash {
 	public int hash(int i);
 }

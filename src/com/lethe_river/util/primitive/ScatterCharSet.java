@@ -25,8 +25,6 @@ public final class ScatterCharSet extends AbstractCharSet {
 	private static final float DEFAULT_LOAD_FACTOR = 0.75f;
 	private static final int MAX_CAPACITY = 1<<30;
 
-	private static final IntIntHash hashFunction = HashSupport.thomasMueller();
-
 	private static final char[] EMPTY_DATA = {};
 
 	// NULL以外の要素を入れる配列
@@ -299,7 +297,7 @@ public final class ScatterCharSet extends AbstractCharSet {
 	 * @return 要素のハッシュ(正数のint)
 	 */
 	private static int hash(char j) {
-		return Integer.MAX_VALUE & hashFunction.hash(j);
+		return Integer.MAX_VALUE & HashSupport.thomasMueller(j);
 	}
 
 	/**

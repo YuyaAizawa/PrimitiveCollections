@@ -19,7 +19,7 @@ public class CuckooHashIntSet extends AbstractIntSet {
 
 	private static final Iterator<IntIntHash> HASH_LIST =
 			IntStream.iterate(1, HashSupport::avoid2357)
-					.mapToObj(p -> HashSupport.hash32shiftmult(p))
+					.mapToObj(p -> (IntIntHash)(i -> HashSupport.hash32shiftmult(p, i)))
 					.iterator();
 
 	// 0以外の要素を入れる配列
