@@ -645,8 +645,15 @@ public final class ScatterLongIntMap implements LongIntMap {
 			if(removed || index == -2) {
 				throw new IllegalStateException();
 			}
-			ScatterLongIntMap.this.remove(index == -1 ? NULL : keys[index]);
+
+			long key = index == -1 ? NULL : keys[index];
+			ScatterLongIntMap.this.remove(key);
 			removed = true;
+
+			// pullでズレた分を補正
+			if(key != NULL && keys[hash(key) % keys.length] != NULL) {
+				index--;
+			}
 		}
 
 		@Override

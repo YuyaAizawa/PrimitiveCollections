@@ -353,7 +353,8 @@ public final class ScatterLongSet extends AbstractLongSet {
 				}
 				try {
 					for(;;) {
-						long retVal = field[index++];
+						long retVal = field[index];
+						index++;
 						if(retVal != NULL) {
 							replied++;
 							removable = true;
@@ -378,6 +379,11 @@ public final class ScatterLongSet extends AbstractLongSet {
 				expectedModCount = modCount;
 				removed++;
 				removable = false;
+
+				// pullでズレた分を補正
+				if(removeTarget != NULL && field[hash(removeTarget) % field.length] != NULL) {
+					index--;
+				}
 			}
 		};
 	}

@@ -646,8 +646,14 @@ public final class ScatterIntIntMap implements IntIntMap {
 			if(removed || index == -2) {
 				throw new IllegalStateException();
 			}
-			ScatterIntIntMap.this.remove(index == -1 ? NULL : keys[index]);
+			int key = index == -1 ? NULL : keys[index];
+			ScatterIntIntMap.this.remove(key);
 			removed = true;
+
+			// pullでズレた分を補正
+			if(key != NULL && keys[hash(key) % keys.length] != NULL) {
+				index--;
+			}
 		}
 
 		@Override

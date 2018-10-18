@@ -376,6 +376,11 @@ public final class ScatterCharSet extends AbstractCharSet {
 				expectedModCount = modCount;
 				removed++;
 				removable = false;
+
+				// pullでズレた分を補正
+				if(removeTarget != NULL && field[hash(removeTarget) % field.length] != NULL) {
+					index--;
+				}
 			}
 		};
 	}
