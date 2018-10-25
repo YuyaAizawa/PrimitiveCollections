@@ -43,7 +43,7 @@ public final class ScatterCharSet extends AbstractCharSet {
 	private int threshold;
 
 	// 構造的変更検出用
-	private int modCount;
+	private transient int modCount;
 
 	/**
 	 * 初期容量と負荷係数を指定してCharScatterTableを生成する.

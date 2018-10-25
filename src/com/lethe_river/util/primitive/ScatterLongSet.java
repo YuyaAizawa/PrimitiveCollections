@@ -20,7 +20,7 @@ public final class ScatterLongSet extends AbstractLongSet {
 
 
 	// NULLをあらわす数字
-	private static final long NULL = 0;
+	private static final long NULL = 0L;
 
 	private static final int DEFAULT_INIT_CAPACITY = 11;
 	private static final float DEFAULT_LOAD_FACTOR = 0.75f;
@@ -44,7 +44,7 @@ public final class ScatterLongSet extends AbstractLongSet {
 	private int threshold;
 
 	// 構造的変更検出用
-	private int modCount;
+	private transient int modCount;
 
 	/**
 	 * 初期容量と負荷係数を指定してScatterLongSetを生成する.
