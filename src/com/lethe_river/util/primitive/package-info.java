@@ -17,6 +17,7 @@
  *     - ArrayByteList
  *   - IntList
  *     - ArrayIntList
+ *     - FrozenArrayIntList
  * - PrimitiveSet
  *   - ByteSet
  *     - BitFieldByteSet

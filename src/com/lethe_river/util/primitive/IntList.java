@@ -263,5 +263,13 @@ public interface IntList extends PrimitiveList<Integer>, IntCollection {
 	public static IntList empty() {
 		return EmptyList.ofInt();
 	}
+
+	public static IntList of(int... is) {
+		if(is.length == 0) {
+			return empty();
+		} else {
+			return new FrozenArrayIntList(is);
+		}
+	}
 }
 
