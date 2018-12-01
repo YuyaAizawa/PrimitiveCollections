@@ -62,11 +62,18 @@ public interface LongIntMap extends PrimitiveMap<Long, Integer> {
 	LongSet keys();
 
 	/**
+	 * この写像の終域を返す．戻り値への変更はこの写像へ反映される．
+	 * @return 終域
+	 */
+	@Override
+	IntCollection values();
+
+	/**
 	 * この写像の各元の対応関係を列挙するカーソルを返す．
 	 * @return 対応関係を列挙するカーソル
 	 */
 	@Override
-	IntCollection values();
+	LongIntCursor entryCursor();
 
 	/**
 	 * 指定されたオブジェクトがこの写像と同値か判定する．
@@ -75,9 +82,6 @@ public interface LongIntMap extends PrimitiveMap<Long, Integer> {
 	 * @param obj
 	 * @return
 	 */
-	@Override
-	LongIntCursor entryCursor();
-
 	@Override
 	boolean equals(Object obj);
 }

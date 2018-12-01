@@ -13,7 +13,7 @@ import java.util.function.IntConsumer;
  * @author YuyaAizawa
  *
  */
-public class ImmutableArrayByteSet extends AbstractByteSortedSet {
+public class FrozenArrayByteSet extends AbstractByteSortedSet {
 	private final byte[] field;
 	private final int from;
 	private final int to;
@@ -22,11 +22,11 @@ public class ImmutableArrayByteSet extends AbstractByteSortedSet {
 	 * ソート済み配列を利用して不変IntSetを作成する．配列は変更されてはならない．
 	 * @param field
 	 */
-	private ImmutableArrayByteSet(byte[] field) {
+	private FrozenArrayByteSet(byte[] field) {
 		this(field, 0, field.length);
 	}
 
-	private ImmutableArrayByteSet(byte[] field, int from, int to) {
+	private FrozenArrayByteSet(byte[] field, int from, int to) {
 		this.field = field;
 		this.from = from;
 		this.to = to;
@@ -37,7 +37,7 @@ public class ImmutableArrayByteSet extends AbstractByteSortedSet {
 	 * @param bytes
 	 * @return このクラスのインスタンス
 	 */
-	public static ImmutableArrayByteSet of(byte... bytes) {
+	public static FrozenArrayByteSet of(byte... bytes) {
 		byte[] tmp = Arrays.copyOf(bytes, bytes.length);
 		Arrays.sort(tmp);
 		int prev = Byte.MIN_VALUE -1;
@@ -57,7 +57,7 @@ public class ImmutableArrayByteSet extends AbstractByteSortedSet {
 			}
 			prev = tmp[i];
 		}
-		return new ImmutableArrayByteSet(contents);
+		return new FrozenArrayByteSet(contents);
 	}
 
 	/**
@@ -65,14 +65,14 @@ public class ImmutableArrayByteSet extends AbstractByteSortedSet {
 	 * @param set
 	 * @return このクラスのインスタンス
 	 */
-	public static ImmutableArrayByteSet of(Set<Byte> set) {
+	public static FrozenArrayByteSet of(Set<Byte> set) {
 		byte[] contents = new byte[set.size()];
 		int index = 0;
 		for(byte b: set) {
 			contents[index++] = b;
 		}
 		Arrays.sort(contents);
-		return new ImmutableArrayByteSet(contents);
+		return new FrozenArrayByteSet(contents);
 	}
 
 	/**
@@ -260,7 +260,7 @@ public class ImmutableArrayByteSet extends AbstractByteSortedSet {
 		if(fromIndex == toIndex) {
 			return EmptySet.ofByte();
 		}
-		return new ImmutableArrayByteSet(field, Math.max(fromIndex, this.from), Math.min(toIndex, this.to));
+		return new FrozenArrayByteSet(field, Math.max(fromIndex, this.from), Math.min(toIndex, this.to));
 	}
 }
 

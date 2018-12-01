@@ -14,16 +14,16 @@ import java.util.function.IntConsumer;
  * @author YuyaAizawa
  *
  */
-public class ImmutableArrayIntSet extends AbstractIntSortedSet {
+public class FrozenArrayIntSet extends AbstractIntSortedSet {
 	private final int[] field;
 	private final int from;
 	private final int to;
 
-	private ImmutableArrayIntSet(int[] field) {
+	private FrozenArrayIntSet(int[] field) {
 		this(field, 0, field.length);
 	}
 
-	private ImmutableArrayIntSet(int[] field, int from, int to) {
+	private FrozenArrayIntSet(int[] field, int from, int to) {
 		this.field = field;
 		this.from = from;
 		this.to = to;
@@ -34,8 +34,8 @@ public class ImmutableArrayIntSet extends AbstractIntSortedSet {
 	 * @param ints
 	 * @return このクラスのインスタンス
 	 */
-	public static ImmutableArrayIntSet of(int... ints) {
-		return new ImmutableArrayIntSet(Arrays.stream(ints)
+	public static FrozenArrayIntSet of(int... ints) {
+		return new FrozenArrayIntSet(Arrays.stream(ints)
 				.sorted()
 				.distinct()
 				.toArray());
@@ -46,8 +46,8 @@ public class ImmutableArrayIntSet extends AbstractIntSortedSet {
 	 * @param set
 	 * @return このクラスのインスタンス
 	 */
-	public static ImmutableArrayIntSet of(Set<Integer> set) {
-		return new ImmutableArrayIntSet(set.stream()
+	public static FrozenArrayIntSet of(Set<Integer> set) {
+		return new FrozenArrayIntSet(set.stream()
 				.mapToInt(Integer::intValue)
 				.sorted()
 				.toArray());
@@ -98,7 +98,7 @@ public class ImmutableArrayIntSet extends AbstractIntSortedSet {
 	 * @param is
 	 * @return 含まれればtrue
 	 */
-	public boolean containsAll(ImmutableArrayIntSet is) {
+	public boolean containsAll(FrozenArrayIntSet is) {
 		if(!contains(is.first()) || !contains(is.last())) {
 			return false;
 		}
@@ -225,6 +225,6 @@ public class ImmutableArrayIntSet extends AbstractIntSortedSet {
 		if(fromIndex == toIndex) {
 			return EmptySet.ofInt();
 		}
-		return new ImmutableArrayIntSet(field, Math.max(fromIndex, this.from), Math.min(toIndex, this.to));
+		return new FrozenArrayIntSet(field, Math.max(fromIndex, this.from), Math.min(toIndex, this.to));
 	}
 }

@@ -10,11 +10,11 @@ import java.util.stream.IntStream;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.lethe_river.util.primitive.ImmutableArrayIntSet;
+import com.lethe_river.util.primitive.FrozenArrayIntSet;
 
 
 
-public class ImmutableArrayIntSetTest {
+public class FrozenArrayIntSetTest {
 
 	public static Set<Integer> oracle;
 
@@ -30,7 +30,7 @@ public class ImmutableArrayIntSetTest {
 
 	@Test
 	public void containsTest() {
-		ImmutableArrayIntSet target = ImmutableArrayIntSet.of(oracle.stream().mapToInt(i -> i).toArray());
+		FrozenArrayIntSet target = FrozenArrayIntSet.of(oracle.stream().mapToInt(i -> i).toArray());
 		IntStream.range(-1000, 1000)
 				.forEach(i -> {
 					assertEquals(oracle.contains(i), target.contains(i));

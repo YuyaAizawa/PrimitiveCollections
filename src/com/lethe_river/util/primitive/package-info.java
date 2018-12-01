@@ -20,12 +20,16 @@
  * - PrimitiveSet
  *   - ByteSet
  *     - BitFieldByteSet
- *     - ImmutableArrayIntSet
- *     - ScatterIntSet
+ *     - FrozenArrayByteSet
+ *     - ScatterByteSet
+ *   - CharSet
+ *     - ScatterCharSet
  *   - IntSet
- *     - ScatterIntSet
  *     - CuckooHashIntSet
- *     - ImmutableArrayIntSet
+ *     - ScatterIntSet
+ *     - FrozenArrayIntSet
+ *   - LongSet
+ *     - ScatterLongSet
  * - PrimitiveMap
  *   - IntIntMap
  *     - ScatterIntIntMap
@@ -73,4 +77,6 @@ package com.lethe_river.util.primitive;
  *   無いほうがシンプル
  *   あったほうが標準ライブラリへのラッパーコードが減る
  *   積極的になくす理由はない
+ *
+ * パッケージをまとめるか
  */
