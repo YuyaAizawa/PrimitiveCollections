@@ -1,8 +1,6 @@
 package com.lethe_river.util.primitive;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
@@ -198,21 +196,6 @@ public final class ArrayByteList extends AbstractByteList implements RandomAcces
 		}
 	}
 
-	private void writeObject(ObjectOutputStream oos) throws IOException {
-		oos.writeInt(size);
-		for (int i = 0; i < size; i++) {
-			oos.writeInt(field[i]);
-		}
-	}
-
-	private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
-		size = ois.readInt();
-		field = new byte[size];
-		for (int i = 0; i < size; i++) {
-			field[i] = ois.readByte();
-		}
-	}
-
 	@Override
 	public ByteListIterator listIterator(int i) {
 		return new ArrayListLterator(i);
@@ -319,5 +302,32 @@ public final class ArrayByteList extends AbstractByteList implements RandomAcces
 				throw new ConcurrentModificationException();
 			}
 		}
+	}
+
+	private static class SerializationProxy implements Serializable {
+		private static final long serialVersionUID = 9164685108597624187L;
+
+		/**
+		 * @serial
+		 */
+		private final byte[] elements;
+
+		public SerializationProxy(ByteList list) {
+			this.elements = list.toArray();
+		}
+
+		private Object readResolve() {
+			ArrayByteList result = new ArrayByteList(elements.length);
+			result.addAll(elements);
+			return result;
+		}
+	}
+
+	private Object writeReplace() {
+		return new SerializationProxy(this);
+	}
+
+	private void readObject(java.io.ObjectInputStream s) throws java.io.InvalidObjectException {
+		throw new java.io.InvalidObjectException("Proxy required");
 	}
 }

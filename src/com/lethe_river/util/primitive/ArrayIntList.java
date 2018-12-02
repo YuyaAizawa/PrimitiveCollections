@@ -1,8 +1,6 @@
 package com.lethe_river.util.primitive;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
@@ -15,9 +13,9 @@ import java.util.RandomAccess;
  * @author YuyaAizawa
  *
  */
-public final class ArrayIntList extends AbstractIntList implements RandomAccess {
 
-	private static final long serialVersionUID = 3231433501689654601L;
+@SuppressWarnings("serial") // SerializationProxyを利用
+public final class ArrayIntList extends AbstractIntList implements RandomAccess {
 
 	private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE >> 1;
 
@@ -202,21 +200,6 @@ public final class ArrayIntList extends AbstractIntList implements RandomAccess 
 		return new ArrayListIterator(i);
 	}
 
-	private void writeObject(ObjectOutputStream oos) throws IOException {
-		oos.writeInt(size);
-		for (int i = 0; i < size; i++) {
-			oos.writeInt(field[i]);
-		}
-	}
-
-	private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
-		size = ois.readInt();
-		field = new int[size];
-		for (int i = 0; i < size; i++) {
-			field[i] = ois.readInt();
-		}
-	}
-
 	private class ArrayListIterator implements IntListIterator {
 
 		// 構造的変更検出用
@@ -318,5 +301,33 @@ public final class ArrayIntList extends AbstractIntList implements RandomAccess 
 				throw new ConcurrentModificationException();
 			}
 		}
+	}
+
+	private static class SerializationProxy implements Serializable {
+
+		private static final long serialVersionUID = 6035304906597368933L;
+
+		/**
+		 * @serial
+		 */
+		private final int[] elements;
+
+		public SerializationProxy(IntList list) {
+			this.elements = list.toArray();
+		}
+
+		private Object readResolve() {
+			ArrayIntList result = new ArrayIntList(elements.length);
+			result.addAll(elements);
+			return result;
+		}
+	}
+
+	private Object writeReplace() {
+		return new SerializationProxy(this);
+	}
+
+	private void readObject(java.io.ObjectInputStream s) throws java.io.InvalidObjectException {
+		throw new java.io.InvalidObjectException("Proxy required");
 	}
 }

@@ -1,5 +1,6 @@
 package com.lethe_river.util.primitive;
 
+import java.io.Serializable;
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
@@ -33,8 +34,9 @@ import java.util.PrimitiveIterator;
  * HashSet        (byte): 64, 640, 5920, 56288, 272864, 545632
  * InsScatterTable(byte): 56, 152,  848,  6448,  51248, 102448
  */
+
+@SuppressWarnings("serial") // SerializationProxyに委譲
 public final class ScatterIntSet extends AbstractIntSet {
-	private static final long serialVersionUID = 5569547128406006928L;
 
 	// NULLをあらわす数字
 	private static final int NULL = 0;
@@ -61,7 +63,7 @@ public final class ScatterIntSet extends AbstractIntSet {
 	private int threshold;
 
 	// 構造的変更検出用
-	private transient int modCount;
+	private int modCount;
 
 	/**
 	 * 初期容量と負荷係数を指定してIntScatterTableを生成する.
@@ -403,5 +405,38 @@ public final class ScatterIntSet extends AbstractIntSet {
 				}
 			}
 		};
+	}
+
+	private static class SerializationProxy implements Serializable {
+		private static final long serialVersionUID = 79705527432289910L;
+
+		/**
+		 * @serial
+		 */
+		private final int[] elements;
+
+		/**
+		 * @serial
+		 */
+		private final float loadFactor;
+
+		public SerializationProxy(ScatterIntSet set) {
+			this.elements = set.toArray();
+			this.loadFactor = set.loadFactor;
+		}
+
+		private Object readResolve() {
+			ScatterIntSet result = new ScatterIntSet((int)(elements.length / loadFactor)+1, loadFactor);
+			result.addAll(elements);
+			return result;
+		}
+	}
+
+	private Object writeReplace() {
+		return new SerializationProxy(this);
+	}
+
+	private void readObject(java.io.ObjectInputStream s) throws java.io.InvalidObjectException {
+		throw new java.io.InvalidObjectException("Proxy required");
 	}
 }

@@ -1,5 +1,6 @@
 package com.lethe_river.util.primitive;
 
+import java.io.Serializable;
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
@@ -16,6 +17,7 @@ import java.util.PrimitiveIterator;
  *
  */
 
+@SuppressWarnings("serial") // SerializationProxyに委譲
 public final class ScatterLongSet extends AbstractLongSet {
 
 
@@ -44,7 +46,7 @@ public final class ScatterLongSet extends AbstractLongSet {
 	private int threshold;
 
 	// 構造的変更検出用
-	private transient int modCount;
+	private int modCount;
 
 	/**
 	 * 初期容量と負荷係数を指定してScatterLongSetを生成する.
@@ -386,5 +388,38 @@ public final class ScatterLongSet extends AbstractLongSet {
 				}
 			}
 		};
+	}
+
+	private static class SerializationProxy implements Serializable {
+		private static final long serialVersionUID = -8146814681573930878L;
+
+		/**
+		 * @serial
+		 */
+		private final long[] elements;
+
+		/**
+		 * @serial
+		 */
+		private final float loadFactor;
+
+		public SerializationProxy(ScatterLongSet set) {
+			this.elements = set.toArray();
+			this.loadFactor = set.loadFactor;
+		}
+
+		private Object readResolve() {
+			ScatterLongSet result = new ScatterLongSet((int)(elements.length / loadFactor)+1, loadFactor);
+			result.addAll(elements);
+			return result;
+		}
+	}
+
+	private Object writeReplace() {
+		return new SerializationProxy(this);
+	}
+
+	private void readObject(java.io.ObjectInputStream s) throws java.io.InvalidObjectException {
+		throw new java.io.InvalidObjectException("Proxy required");
 	}
 }

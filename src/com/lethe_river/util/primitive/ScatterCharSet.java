@@ -1,5 +1,6 @@
 package com.lethe_river.util.primitive;
 
+import java.io.Serializable;
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
 
@@ -15,8 +16,8 @@ import java.util.NoSuchElementException;
  *
  */
 
+@SuppressWarnings("serial") // SerializationProxyに委譲
 public final class ScatterCharSet extends AbstractCharSet {
-
 
 	// NULLをあらわす数字
 	private static final char NULL = 0;
@@ -43,7 +44,7 @@ public final class ScatterCharSet extends AbstractCharSet {
 	private int threshold;
 
 	// 構造的変更検出用
-	private transient int modCount;
+	private int modCount;
 
 	/**
 	 * 初期容量と負荷係数を指定してCharScatterTableを生成する.
@@ -383,6 +384,39 @@ public final class ScatterCharSet extends AbstractCharSet {
 				}
 			}
 		};
+	}
+
+	private static class SerializationProxy implements Serializable {
+		private static final long serialVersionUID = 236463521532321741L;
+
+		/**
+		 * @serial
+		 */
+		private final char[] elements;
+
+		/**
+		 * @serial
+		 */
+		private final float loadFactor;
+
+		public SerializationProxy(ScatterCharSet set) {
+			this.elements = set.toArray();
+			this.loadFactor = set.loadFactor;
+		}
+
+		private Object readResolve() {
+			ScatterCharSet result = new ScatterCharSet((int)(elements.length / loadFactor)+1, loadFactor);
+			result.addAll(elements);
+			return result;
+		}
+	}
+
+	private Object writeReplace() {
+		return new SerializationProxy(this);
+	}
+
+	private void readObject(java.io.ObjectInputStream s) throws java.io.InvalidObjectException {
+		throw new java.io.InvalidObjectException("Proxy required");
 	}
 }
 
