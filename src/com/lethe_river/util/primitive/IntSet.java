@@ -143,5 +143,17 @@ public interface IntSet extends PrimitiveSet<Integer>, IntCollection {
 	public static IntSortedSet empty() {
 		return EmptySet.ofInt();
 	}
+
+	/**
+	 * 不変InSetを生成する
+	 * @return 不変IntSet
+	 */
+	public static IntSortedSet of(int... is) {
+		if(is.length == 0) {
+			return empty();
+		} else {
+			return FrozenArrayIntSet.of(is);
+		}
+	}
 }
 

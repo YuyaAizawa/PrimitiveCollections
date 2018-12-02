@@ -264,6 +264,10 @@ public interface IntList extends PrimitiveList<Integer>, IntCollection {
 		return EmptyList.ofInt();
 	}
 
+	/**
+	 * 不変IntListを生成する
+	 * @return 不変IntList
+	 */
 	public static IntList of(int... is) {
 		if(is.length == 0) {
 			return empty();
