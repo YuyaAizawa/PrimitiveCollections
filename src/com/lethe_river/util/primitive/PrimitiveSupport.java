@@ -23,8 +23,17 @@ final class PrimitiveSupport {
 	 * @param i
 	 * @return int値
 	 */
-	static int oneFill(int i) {
-		return zeroFill(i) ^ -1;
+	static int oneFillInt(int i) {
+		return zeroFillInt(i) ^ -1;
+	}
+
+	/**
+	 * 指定した桁数だけ下位bitを連続する1で埋めたlong値を返す
+	 * @param i
+	 * @return long値
+	 */
+	static long oneFillLong(int i) {
+		return zeroFillLong(i) ^ -1L;
 	}
 
 	/**
@@ -32,14 +41,29 @@ final class PrimitiveSupport {
 	 * @param i
 	 * @return int値
 	 */
-	static int zeroFill(int i) {
+	static int zeroFillInt(int i) {
 		if(i < 0) {
 			return -1;
 		}
-		if(i >= 32) {
+		if(i >= Integer.SIZE) {
 			return  0;
 		}
 		return Integer.MIN_VALUE >> i-1;
+	}
+
+	/**
+	 * 指定した桁数だけ下位bitを連続する0で埋めたlong値を返す
+	 * @param i
+	 * @return long値
+	 */
+	static long zeroFillLong(int i) {
+		if(i < 0) {
+			return -1L;
+		}
+		if (i >= Long.SIZE) {
+			return 0L;
+		}
+		return Long.MIN_VALUE >> i-1;
 	}
 
 	/**

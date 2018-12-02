@@ -11,12 +11,13 @@ import java.util.RandomAccess;
  *
  */
 public final class BitFieldByteSet extends AbstractByteSortedSet implements RandomAccess {
-	private static final int[] EMPTY_BIT_FIELD = {};
+	private static final long[] EMPTY_BIT_FIELD = {};
+	private static final int FIELD_LENGTH = 256 / Long.SIZE;
 
 	/**
 	 * ビットフィールド field[0]が1のとき-128を含む
 	 */
-	private int[] field;
+	private long[] field;
 
 	private transient int modCount;
 
@@ -25,8 +26,8 @@ public final class BitFieldByteSet extends AbstractByteSortedSet implements Rand
 		modCount = 0;
 	}
 
-	BitFieldByteSet(int[] field) {
-		if(field.length != Integer.SIZE / Byte.SIZE) {
+	BitFieldByteSet(long[] field) {
+		if(field.length != FIELD_LENGTH) {
 			throw new Error();
 		}
 		this.field = field;
@@ -38,9 +39,9 @@ public final class BitFieldByteSet extends AbstractByteSortedSet implements Rand
 		if(field == EMPTY_BIT_FIELD) {
 			return false;
 		}
-		int unsigned = b-Byte.MIN_VALUE;
-		int index = unsigned / Integer.SIZE;
-		int mask = 1 << (unsigned % (Integer.SIZE));
+		int unsigned = b - Byte.MIN_VALUE;
+		int index = unsigned / Long.SIZE;
+		long mask = 1L << (unsigned % (Long.SIZE));
 
 		return (field[index] & mask) != 0;
 	}
@@ -48,11 +49,11 @@ public final class BitFieldByteSet extends AbstractByteSortedSet implements Rand
 	@Override
 	public boolean add(byte b) {
 		if(field == EMPTY_BIT_FIELD) {
-			field = new int[Integer.SIZE/Integer.BYTES];
+			field = new long[FIELD_LENGTH];
 		}
-		int unsigned = b-Byte.MIN_VALUE;
-		int index = unsigned / Integer.SIZE;
-		int mask = 1 << (unsigned % (Integer.SIZE));
+		int unsigned = b - Byte.MIN_VALUE;
+		int index = unsigned / Long.SIZE;
+		long mask = 1L << (unsigned % (Long.SIZE));
 
 		return field[index] != (field[index] |= mask);
 	}
@@ -62,27 +63,13 @@ public final class BitFieldByteSet extends AbstractByteSortedSet implements Rand
 			return false;
 		}
 		if(field == EMPTY_BIT_FIELD) {
-			field = new int[Integer.SIZE/Integer.BYTES];
+			field = new long[FIELD_LENGTH];
 		}
 		boolean changed = false;
-		for (int i = 0; i < (Integer.SIZE/Integer.BYTES); i++) {
+		for (int i = 0; i < FIELD_LENGTH; i++) {
 			changed |= field[i] != (field[i] |= bs.field[i]);
 		}
 		return changed;
-	}
-
-	@Override
-	public boolean addAll(ByteCollection bs) {
-		if(bs.isEmpty()) {
-			return true;
-		}
-		if(field == EMPTY_BIT_FIELD) {
-			field = new int[Integer.SIZE/Integer.BYTES];
-		}
-		if(bs instanceof BitFieldByteSet) {
-			return addAll((BitFieldByteSet)bs);
-		}
-		return super.addAll(bs);
 	}
 
 	@Override
@@ -90,11 +77,11 @@ public final class BitFieldByteSet extends AbstractByteSortedSet implements Rand
 		if(field == EMPTY_BIT_FIELD) {
 			return false;
 		}
-		int unsigned = b-Byte.MIN_VALUE;
-		int index = unsigned / Integer.SIZE;
-		int mask = ~(1 << (unsigned % (Integer.SIZE)));
+		int unsigned = b - Byte.MIN_VALUE;
+		int index = unsigned / Long.SIZE;
+		long mask = ~(1 << (unsigned % (Long.SIZE)));
 
-		int prev = field[index];
+		long prev = field[index];
 		field[index] &= mask;
 
 		return prev != field[index];
@@ -105,10 +92,10 @@ public final class BitFieldByteSet extends AbstractByteSortedSet implements Rand
 		if(field == EMPTY_BIT_FIELD) {
 			throw new NoSuchElementException();
 		}
-		for (int i = 0; i < (Integer.SIZE/Integer.BYTES); i++) {
-			int lowest = Integer.numberOfTrailingZeros(field[i]);
-			if(lowest != 32) {
-				return (byte)(Integer.SIZE * i + lowest + Byte.MIN_VALUE);
+		for (int i = 0; i < FIELD_LENGTH; i++) {
+			int lowest = Long.numberOfTrailingZeros(field[i]);
+			if(lowest != Long.SIZE) {
+				return (byte)(Long.SIZE * i + lowest + Byte.MIN_VALUE);
 			}
 		}
 		throw new NoSuchElementException();
@@ -118,10 +105,10 @@ public final class BitFieldByteSet extends AbstractByteSortedSet implements Rand
 		if(field == EMPTY_BIT_FIELD) {
 			throw new NoSuchElementException();
 		}
-		for (int i = Integer.SIZE/Integer.BYTES -1; i >= 0; i--) {
-			int highest = Integer.numberOfLeadingZeros(field[i]);
-			if(highest != 32) {
-				return (byte)(Integer.SIZE * i + highest + Byte.MIN_VALUE);
+		for (int i = FIELD_LENGTH -1; i >= 0; i--) {
+			int highest = Long.numberOfLeadingZeros(field[i]);
+			if(highest != Long.SIZE) {
+				return (byte)(Long.SIZE * i + highest + Byte.MIN_VALUE);
 			}
 		}
 		throw new NoSuchElementException();
@@ -138,8 +125,8 @@ public final class BitFieldByteSet extends AbstractByteSortedSet implements Rand
 			return 0;
 		}
 		int size = 0;
-		for (int i = 0; i < Integer.SIZE/Integer.BYTES; i++) {
-			size += Integer.bitCount(field[i]);
+		for (int i = 0; i < FIELD_LENGTH; i++) {
+			size += Long.bitCount(field[i]);
 		}
 		return size;
 	}
@@ -161,7 +148,7 @@ public final class BitFieldByteSet extends AbstractByteSortedSet implements Rand
 		int previousUnsigned = UNFETCHED;
 
 		int fieldIndex;
-		int bitStatus;
+		long bitStatus;
 
 		final int from, to;
 
@@ -171,7 +158,7 @@ public final class BitFieldByteSet extends AbstractByteSortedSet implements Rand
 			this.from = from;
 			this.to   = to;
 
-			fieldIndex = from/Integer.SIZE;
+			fieldIndex = from/Long.SIZE;
 
 			// TODO 高速化
 			bitStatus = 0;
@@ -184,7 +171,7 @@ public final class BitFieldByteSet extends AbstractByteSortedSet implements Rand
 		 * 次のbitをnextUnsignedに格納する(存在しない場合はRUN_OUT)．
 		 */
 		private void fetch() {
-			while(fieldIndex < Integer.SIZE/Integer.BYTES) {
+			while(fieldIndex < FIELD_LENGTH) {
 				if(bitStatus == 0) {
 					bitStatus = field[fieldIndex] & -field[fieldIndex];
 				}
@@ -192,7 +179,7 @@ public final class BitFieldByteSet extends AbstractByteSortedSet implements Rand
 					fieldIndex++;
 					continue;
 				}
-				nextUnsigned = Integer.numberOfTrailingZeros(bitStatus) + fieldIndex * Integer.SIZE;
+				nextUnsigned = Long.numberOfTrailingZeros(bitStatus) + fieldIndex * Long.SIZE;
 				if(nextUnsigned >= to) {
 					break;
 				}
@@ -282,14 +269,14 @@ public final class BitFieldByteSet extends AbstractByteSortedSet implements Rand
 				throw new NoSuchElementException();
 			}
 
-			int mask = PrimitiveSupport.zeroFill(from|31);
-			int i = from / Integer.SIZE;
-			for (; i < (Integer.SIZE/Integer.BYTES); i++) {
-				int lowest = Integer.numberOfTrailingZeros(mask & field[i]);
-				if(lowest != 32) {
-					return (byte)(Integer.SIZE * i + lowest + Byte.MIN_VALUE);
+			long mask = PrimitiveSupport.zeroFillLong(from|63);
+			int i = from / Long.SIZE;
+			for (; i < FIELD_LENGTH; i++) {
+				int lowest = Long.numberOfTrailingZeros(mask & field[i]);
+				if(lowest != Long.SIZE) {
+					return (byte)(Long.SIZE * i + lowest + Byte.MIN_VALUE);
 				}
-				mask = -1;
+				mask = -1L;
 			}
 			throw new NoSuchElementException();
 		}
@@ -300,12 +287,12 @@ public final class BitFieldByteSet extends AbstractByteSortedSet implements Rand
 				throw new NoSuchElementException();
 			}
 
-			int mask = PrimitiveSupport.oneFill(to|31);
-			int i = to / Integer.SIZE;
+			long mask = PrimitiveSupport.oneFillLong(to|63);
+			int i = to / Long.SIZE;
 			for (; i >= 0; i--) {
-				int highest = Integer.numberOfLeadingZeros(mask & field[i]);
-				if(highest != 32) {
-					return (byte)(Integer.SIZE * i + highest + Byte.MIN_VALUE);
+				int highest = Long.numberOfLeadingZeros(mask & field[i]);
+				if(highest != Long.SIZE) {
+					return (byte)(Long.SIZE * i + highest + Byte.MIN_VALUE);
 				}
 				mask = -1;
 			}

@@ -92,6 +92,10 @@ public abstract class AbstractByteCollection implements ByteCollection {
 
 	@Override
 	public boolean addAll(ByteCollection is) {
+		if(is.isEmpty()) {
+			return false;
+		}
+
 		boolean changed = false;
 
 		ByteIterator i = is.iterator();
