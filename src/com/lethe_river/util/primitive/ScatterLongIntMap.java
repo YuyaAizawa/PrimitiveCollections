@@ -1,10 +1,24 @@
 package com.lethe_river.util.primitive;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 
+/**
+ * scatter tableを用いたLongIntMapの実装
+ *
+ * - open address
+ * - prime number bucket
+ * - Robin Hood Hashing
+ * - liner probing
+ *
+ * @author YuyaAizawa
+ *
+ */
+
+@SuppressWarnings("serial") // SerializationProxyに委譲
 public final class ScatterLongIntMap implements LongIntMap {
 
 	private static final long NULL = 0;
@@ -33,7 +47,7 @@ public final class ScatterLongIntMap implements LongIntMap {
 	private int threshold;
 
 	// 構造的変更検出用
-	private transient int modCount;
+	private int modCount;
 
 	/**
 	 * 初期容量と負荷係数を指定してIntIntScatterMapを生成する.
@@ -567,8 +581,10 @@ public final class ScatterLongIntMap implements LongIntMap {
 
 	private class EntryCursor implements LongIntCursor {
 
-		// -2:開始, -1:NULL, others:配列の添字
-		int index = -2;
+		private static final int INDEX_BEGIN = -2;
+		private static final int INDEX_NULL  = -1;
+
+		int index = INDEX_BEGIN;
 
 		// 構造的変更検出用
 		int expectedModCount = modCount;
@@ -581,15 +597,15 @@ public final class ScatterLongIntMap implements LongIntMap {
 			if(expectedModCount != modCount) {
 				throw new ConcurrentModificationException();
 			}
-			if(index == -2) {
-				index = -1;
+			if(index == INDEX_BEGIN) {
+				index = INDEX_NULL;
 				if(nullKey) {
 					return true;
 				}
 			}
 			if(removed) {
 				removed = false;
-				if(index != -1 && keys[index] != NULL) {
+				if(index != INDEX_NULL && keys[index] != NULL) {
 					return true;
 				}
 			}
@@ -616,7 +632,7 @@ public final class ScatterLongIntMap implements LongIntMap {
 				throw new IllegalStateException();
 			}
 			try {
-				return index == -1 ? NULL : keys[index];
+				return index == INDEX_NULL ? NULL : keys[index];
 			} catch (ArrayIndexOutOfBoundsException e){
 				throw new IllegalStateException();
 			}
@@ -631,7 +647,7 @@ public final class ScatterLongIntMap implements LongIntMap {
 				throw new IllegalStateException();
 			}
 			try {
-				return index == -1 ? nullValue : values[index];
+				return index == INDEX_NULL ? nullValue : values[index];
 			} catch (ArrayIndexOutOfBoundsException e){
 				throw new IllegalStateException();
 			}
@@ -642,11 +658,11 @@ public final class ScatterLongIntMap implements LongIntMap {
 			if(expectedModCount != modCount) {
 				throw new ConcurrentModificationException();
 			}
-			if(removed || index == -2) {
+			if(removed || index == INDEX_BEGIN) {
 				throw new IllegalStateException();
 			}
 
-			long key = index == -1 ? NULL : keys[index];
+			long key = index == INDEX_NULL ? NULL : keys[index];
 			ScatterLongIntMap.this.remove(key);
 			removed = true;
 
@@ -658,14 +674,63 @@ public final class ScatterLongIntMap implements LongIntMap {
 
 		@Override
 		public void setValue(int value) {
-			if(removed || index == -2) {
+			if(removed || index == INDEX_BEGIN) {
 				throw new IllegalStateException();
 			}
 			try {
-				ScatterLongIntMap.this.put(index == -1 ? NULL : keys[index], value);
+				ScatterLongIntMap.this.put(index == INDEX_NULL ? NULL : keys[index], value);
 			} catch(ArrayIndexOutOfBoundsException e) {
 				throw new IllegalStateException();
 			}
 		}
+	}
+
+	private static class SerializationProxy implements Serializable {
+		private static final long serialVersionUID = 4859447273358466041L;
+
+		/**
+		 * @serial
+		 */
+		private final long[] keys;
+
+		/**
+		 * @serial
+		 */
+		private final int[] values;
+
+		/**
+		 * @serial
+		 */
+		private final float loadFactor;
+
+		public SerializationProxy(ScatterLongIntMap map) {
+			this.keys = new long[map.size()];
+			this.values = new int[map.size()];
+
+			int index = 0;
+			for(LongIntCursor cursor = map.entryCursor();cursor.next();) {
+				keys[index] = cursor.key();
+				values[index] = cursor.value();
+				index++;
+			}
+
+			this.loadFactor = map.loadFactor;
+		}
+
+		private Object readResolve() {
+			ScatterLongIntMap result = new ScatterLongIntMap((int)(keys.length / loadFactor)+1, loadFactor);
+			for (int i = 0; i < keys.length; i++) {
+				result.put(keys[i], values[i]);
+			}
+			return result;
+		}
+	}
+
+	private Object writeReplace() {
+		return new SerializationProxy(this);
+	}
+
+	private void readObject(java.io.ObjectInputStream s) throws java.io.InvalidObjectException {
+		throw new java.io.InvalidObjectException("Proxy required");
 	}
 }

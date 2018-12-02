@@ -1,5 +1,7 @@
 package com.lethe_river.util.primitive;
 
+import java.io.Serializable;
+
 /**
  * primitiveからprimitiveへの写像.
  *
@@ -8,7 +10,7 @@ package com.lethe_river.util.primitive;
  * @param <K> 元の型
  * @param <V> 像の型
  */
-public interface PrimitiveMap<K, V> {
+public interface PrimitiveMap<K, V> extends Serializable {
 	/**
 	 * この写像で定義された元と像の対応関係の数を返す．
 	 * @return 要素数
