@@ -11,6 +11,10 @@ import java.util.TreeSet;
 
 import org.junit.Test;
 
+import com.lethe_river.util.primitive.collection.BitFieldByteSet;
+import com.lethe_river.util.primitive.collection.ByteIterator;
+import com.lethe_river.util.primitive.collection.ByteSet;
+
 public class BitFieldByteSetTest {
 	/*
 	 * -100, 0, 1が格納されたテスト対象のインスタンスを返す

@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.lethe_river.util.primitive.FrozenArrayIntSet;
+import com.lethe_river.util.primitive.collection.FrozenArrayIntSet;
 
 
 

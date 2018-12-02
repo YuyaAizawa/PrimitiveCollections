@@ -6,6 +6,9 @@ import java.util.stream.IntStream;
 
 import org.junit.Test;
 
+import com.lethe_river.util.primitive.collection.ArrayIntList;
+import com.lethe_river.util.primitive.collection.IntList;
+
 public class ArrayIntListTest {
 	@Test
 	public void collectTest() {

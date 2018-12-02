@@ -17,6 +17,10 @@ import java.util.function.IntConsumer;
 
 import org.junit.Test;
 
+import com.lethe_river.util.primitive.collection.ArrayIntList;
+import com.lethe_river.util.primitive.collection.IntSet;
+import com.lethe_river.util.primitive.collection.ScatterIntSet;
+
 //import net.sourceforge.sizeof.SizeOf;
 
 public class ScatterIntSetTest {

@@ -11,6 +11,11 @@ import java.util.function.IntConsumer;
 
 import org.junit.Test;
 
+import com.lethe_river.util.primitive.collection.ArrayIntList;
+import com.lethe_river.util.primitive.collection.LongSet;
+import com.lethe_river.util.primitive.collection.ScatterIntSet;
+import com.lethe_river.util.primitive.collection.ScatterLongSet;
+
 public class ScatterLongSetTest {
 	@Test
 	public void test() {

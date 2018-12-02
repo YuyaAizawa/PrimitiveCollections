@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.lethe_river.util.primitive.collection.ArrayByteList;
+
 public class ArrayByteListTest {
 	@Test
 	public void boxedTest() {

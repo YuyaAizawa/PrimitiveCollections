@@ -9,6 +9,9 @@ import java.util.Random;
 
 import org.junit.Test;
 
+import com.lethe_river.util.primitive.collection.IntIntCursor;
+import com.lethe_river.util.primitive.collection.ScatterIntIntMap;
+
 public class IntIntScatterMapTest {
 
 	@Test
