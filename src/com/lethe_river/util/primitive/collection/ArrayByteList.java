@@ -217,6 +217,9 @@ public final class ArrayByteList extends AbstractByteList implements RandomAcces
 		int index;
 
 		public ArrayListLterator(int index) {
+			if(index < 0 || size() < index) {
+				throw new IndexOutOfBoundsException(index);
+			}
 			this.index = index;
 		}
 
@@ -246,6 +249,7 @@ public final class ArrayByteList extends AbstractByteList implements RandomAcces
 			modificationCheck();
 			ArrayByteList.this.insert(index, e);
 
+			expectedModCount = modCount;
 			pIndex = -1;
 			index++;
 		}

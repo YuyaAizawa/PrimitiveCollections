@@ -216,6 +216,9 @@ public final class ArrayIntList extends AbstractIntList implements RandomAccess 
 		int index;
 
 		public ArrayListIterator(int index) {
+			if(index < 0 || size() < index) {
+				throw new IndexOutOfBoundsException(index);
+			}
 			this.index = index;
 		}
 
@@ -245,6 +248,7 @@ public final class ArrayIntList extends AbstractIntList implements RandomAccess 
 			modificationCheck();
 			ArrayIntList.this.insert(index, e);
 
+			expectedModCount = modCount;
 			pIndex = -1;
 			index++;
 		}
