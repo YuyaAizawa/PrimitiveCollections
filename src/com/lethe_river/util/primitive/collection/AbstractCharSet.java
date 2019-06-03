@@ -4,6 +4,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
 
+import com.lethe_river.util.primitive.HashSupport;
+
 /**
  * CharSetのスケルトン
  * @author YuyaAizawa
@@ -38,7 +40,7 @@ public abstract class AbstractCharSet extends AbstractCharCollection implements 
 	public int hashCode() {
 		int hash = 0;
 		for(CharIterator i = iterator();i.hasNext();) {
-			hash += i.nextChar();
+			hash += HashSupport.thomasMueller(i.nextChar());
 		}
 		return hash;
 	}

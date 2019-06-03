@@ -5,6 +5,8 @@ import java.util.PrimitiveIterator;
 import java.util.Set;
 import java.util.StringJoiner;
 
+import com.lethe_river.util.primitive.HashSupport;
+
 /**
  * LongSetのスケルトン
  * @author YuyaAizawa
@@ -39,7 +41,7 @@ public abstract class AbstractLongSet extends AbstractLongCollection implements 
 	public int hashCode() {
 		int hash = 0;
 		for(PrimitiveIterator.OfLong i = iterator();i.hasNext();) {
-			hash += i.nextLong();
+			hash += HashSupport.thomasMueller((int)i.nextLong());
 		}
 		return hash;
 	}

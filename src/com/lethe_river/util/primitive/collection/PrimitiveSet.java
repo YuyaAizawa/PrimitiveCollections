@@ -2,6 +2,8 @@ package com.lethe_river.util.primitive.collection;
 
 import java.util.Set;
 
+import com.lethe_river.util.primitive.HashSupport;
+
 /**
  * プリミティブを格納するSet
  * @author YuyaAizawa
@@ -21,7 +23,7 @@ public interface PrimitiveSet<	T> extends PrimitiveCollection<T> {
 
 	/**
 	 * この集合の要素のハッシュ値の合計を返す.
-	 * java.util.Setと互換性がある．
+	 * 各要素のハッシュ値は{@link HashSupport#thomasMueller(int)}を用いる．
 	 * @return ハッシュ
 	 */
 	@Override
