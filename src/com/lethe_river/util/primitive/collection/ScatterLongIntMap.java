@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
+import java.util.function.IntUnaryOperator;
 
 import com.lethe_river.util.primitive.HashSupport;
 
@@ -215,15 +216,16 @@ public final class ScatterLongIntMap implements LongIntMap {
 		throw new AssertionError();
 	}
 
-
 	@Override
-	public void put(long key, int value) {
+	public void merge(long key, int value, IntUnaryOperator updater) {
 		if(key == NULL) {
 			if(!nullKey) {
 				nullKey = true;
+				nullValue = value;
 				size++;
+			} else {
+				nullValue = updater.applyAsInt(nullValue);
 			}
-			nullValue = value;
 			return;
 		}
 
@@ -239,7 +241,7 @@ public final class ScatterLongIntMap implements LongIntMap {
 			}
 			long j = keys[index];
 			if(j == key) {
-				values[index] = value;
+				values[index] = updater.applyAsInt(values[index]);
 				return;
 			}
 			if(j == NULL) {

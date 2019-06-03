@@ -1,6 +1,7 @@
 package com.lethe_river.util.primitive.collection;
 
 import java.util.NoSuchElementException;
+import java.util.function.IntUnaryOperator;
 
 /**
  * longからintへの写像
@@ -45,7 +46,19 @@ public interface LongIntMap extends PrimitiveMap<Long, Integer> {
 	 * @param value 像
 	 * @throws UnsupportedOperationException この操作に対応していない場合
 	 */
-	void put(long key, int value);
+	default void put(long key, int value) {
+		merge(key, value, old -> value);
+	}
+
+	/**
+	 * 指定した元と像の対応をこの写像に定義するか，既に定義されている場合は更新する．
+	 * 更新は古い値をとり新しい値を返す関数を指定する．
+	 * @param key 元
+	 * @param value 像
+	 * @param updater 更新法
+	 * @throws UnsupportedOperationException この操作に対応していない場合
+	 */
+	void merge(long key, int value, IntUnaryOperator updater);
 
 	/**
 	 * 指定した元をもつ対応関係をこの写像から取り除く
