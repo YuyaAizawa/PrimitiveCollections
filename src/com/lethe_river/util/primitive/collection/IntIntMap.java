@@ -1,13 +1,14 @@
 package com.lethe_river.util.primitive.collection;
 
 import java.util.NoSuchElementException;
+import java.util.function.IntUnaryOperator;
 
 /**
  * intからintへの写像
  * @author YuyaAizawa
  *
  */
-public interface IntIntMap extends PrimitiveMap<Integer, Integer>{
+public interface IntIntMap extends PrimitiveMap<Integer, Integer> {
 
 	/**
 	 * 指定したint値がこのIntIntMapの始域に含まれるか判定する
@@ -45,7 +46,19 @@ public interface IntIntMap extends PrimitiveMap<Integer, Integer>{
 	 * @param value 像
 	 * @throws UnsupportedOperationException この操作に対応していない場合
 	 */
-	void put(int key, int value);
+	default void put(int key, int value) {
+		merge(key, value, old -> value);
+	}
+
+	/**
+	 * 指定した元と像の対応をこの写像に定義するか，既に定義されている場合は更新する．
+	 * 更新は古い値をとり新しい値を返す関数を指定する．
+	 * @param key 元
+	 * @param value 像
+	 * @param updater 更新法
+	 * @throws UnsupportedOperationException この操作に対応していない場合
+	 */
+	void merge(int key, int value, IntUnaryOperator updater);
 
 	/**
 	 * 指定した元をもつ対応関係をこの写像から取り除く

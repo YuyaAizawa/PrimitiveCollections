@@ -4,6 +4,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
 
+import com.lethe_river.util.primitive.HashSupport;
+
 /**
  * ByteSetのスケルトン
  * @author YuyaAizawa
@@ -38,7 +40,7 @@ public abstract class AbstractByteSet extends AbstractByteCollection implements 
 	public int hashCode() {
 		int hash = 0;
 		for(ByteIterator i = iterator();i.hasNext();) {
-			hash += i.nextByte();
+			hash += HashSupport.thomasMueller(i.nextByte());
 		}
 		return hash;
 	}

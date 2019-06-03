@@ -5,6 +5,8 @@ import java.util.PrimitiveIterator;
 import java.util.Set;
 import java.util.StringJoiner;
 
+import com.lethe_river.util.primitive.HashSupport;
+
 /**
  * IntSetのスケルトン
  * @author YuyaAizawa
@@ -39,7 +41,7 @@ public abstract class AbstractIntSet extends AbstractIntCollection implements In
 	public int hashCode() {
 		int hash = 0;
 		for(PrimitiveIterator.OfInt i = iterator();i.hasNext();) {
-			hash += i.nextInt();
+			hash += HashSupport.thomasMueller(i.nextInt());
 		}
 		return hash;
 	}
