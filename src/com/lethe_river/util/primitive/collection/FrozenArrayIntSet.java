@@ -1,6 +1,7 @@
 package com.lethe_river.util.primitive.collection;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.PrimitiveIterator;
@@ -163,6 +164,11 @@ public class FrozenArrayIntSet extends AbstractIntSortedSet {
 				  | Spliterator.SIZED
 				  | Spliterator.SORTED
 				  | Spliterator.SUBSIZED;
+		}
+
+		@Override
+		public Comparator<? super Integer> getComparator() {
+			return Comparator.naturalOrder();
 		}
 
 		@Override
