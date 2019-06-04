@@ -3,11 +3,6 @@ package com.lethe_river.util.primitive;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-//import java.io.File;
-import java.io.FileNotFoundException;
-//import java.io.IOException;
-//import java.io.OutputStream;
-import java.io.PrintStream;
 //import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Random;
@@ -116,128 +111,128 @@ public class ScatterIntSetTest {
 //		pw.close();
 //	}
 
-	@Test
-	public void speedTest() throws FileNotFoundException {
-//		PrintWriter pw = new PrintWriter(new File("C:\\home\\log2.txt"));
-		PrintStream pw = System.out;
-		int[] rnd = new Random(1145141919810L).ints(2000000, -500000, 500000).toArray();
-		long start, end;
-
-		for(int j = 0;j < 10;j++) {
-			Set<Integer> is = new HashSet<>();
-			for (int i = 0; i < 1000000; i++) {
-				is.add(rnd[i]);
-			}
-		}
-		start = System.currentTimeMillis();
-		for(int j = 0;j < 10;j++) {
-			Set<Integer> is = new HashSet<>();
-			for (int i = 0; i < 1000000; i++) {
-				is.add(rnd[i]);
-			}
-		}
-		end   = System.currentTimeMillis();
-		pw.println("HashSet<Integer>: "+(end-start)/10+" msec/(1 new + 1M add)");
-
-		for(int j = 0;j < 10;j++) {
-			Set<Integer> is = new HashSet<>();
-			for (int i = 0; i < 1000000; i++) {
-				is.add(rnd[i]);
-			}
-			for (int i = 0; i < 1000000; i++) {
-				is.remove(rnd[i+1000000]);
-			}
-		}
-		start = System.currentTimeMillis();
-		for(int j = 0;j < 10;j++) {
-			Set<Integer> is = new HashSet<>();
-			for (int i = 0; i < 1000000; i++) {
-				is.add(rnd[i]);
-			}
-			for (int i = 0; i < 1000000; i++) {
-				is.remove(rnd[i+1000000]);
-			}
-		}
-		end   = System.currentTimeMillis();
-		pw.println("HashSet<Integer>: "+(end-start)/10+" msec/(1 new + 1M add + 1M remove)");
-
-		Set<Integer> is = new HashSet<>();
-		for (int i = 0; i < 1000000; i++) {
-			is.add(rnd[i]);
-		}
-		for(int j = 0;j < 10;j++) {
-			for (int i = 0; i < 1000000; i++) {
-				is.contains(rnd[i+1000000]);
-			}
-		}
-		start = System.currentTimeMillis();
-		for(int j = 0;j < 10;j++) {
-			for (int i = 0; i < 1000000; i++) {
-				is.contains(rnd[i+1000000]);
-			}
-		}
-		end   = System.currentTimeMillis();
-		pw.println("HashSet<Integer>: "+(end-start)/10+" msec/1M contains");
-
-		for(int j = 0;j < 10;j++) {
-			ScatterIntSet ist = new ScatterIntSet();
-			for (int i = 0; i < 1000000; i++) {
-				ist.add(rnd[i]);
-			}
-		}
-		start = System.currentTimeMillis();
-		for(int j = 0;j < 10;j++) {
-			ScatterIntSet ist = new ScatterIntSet();
-			for (int i = 0; i < 1000000; i++) {
-				ist.add(rnd[i]);
-			}
-		}
-		end   = System.currentTimeMillis();
-		pw.println("IntScatterSet : "+(end-start)/10+" msec/(1 new + 1M add)");
-
-		for(int j = 0;j < 10;j++) {
-			ScatterIntSet ist = new ScatterIntSet();
-			for (int i = 0; i < 1000000; i++) {
-				ist.add(rnd[i]);
-			}
-			for (int i = 0; i < 1000000; i++) {
-				ist.remove(rnd[i+1000000]);
-			}
-		}
-		start = System.currentTimeMillis();
-		for(int j = 0;j < 10;j++) {
-			ScatterIntSet ist = new ScatterIntSet();
-			for (int i = 0; i < 1000000; i++) {
-				ist.add(rnd[i]);
-			}
-			for (int i = 0; i < 1000000; i++) {
-				ist.remove(rnd[i+1000000]);
-			}
-		}
-		end   = System.currentTimeMillis();
-		pw.println("IntScatterSet: "+(end-start)/10+" msec/(1 new + 1M add + 1M remove)");
-
-		ScatterIntSet ist = new ScatterIntSet();
-		for (int i = 0; i < 1000000; i++) {
-			ist.add(rnd[i]);
-		}
-		for(int j = 0;j < 10;j++) {
-			for (int i = 0; i < 1000000; i++) {
-				ist.contains(rnd[i+1000000]);
-			}
-		}
-		start = System.currentTimeMillis();
-		for(int j = 0;j < 10;j++) {
-			for (int i = 0; i < 1000000; i++) {
-				ist.contains(rnd[i+1000000]);
-			}
-		}
-		end   = System.currentTimeMillis();
-		pw.println("IntScatterSet : "+(end-start)/10+" msec/1M contains");
-
-		pw.flush();
-		pw.close();
-	}
+//	@Test
+//	public void speedTest() throws FileNotFoundException {
+////		PrintWriter pw = new PrintWriter(new File("C:\\home\\log2.txt"));
+//		PrintStream pw = System.out;
+//		int[] rnd = new Random(1145141919810L).ints(2000000, -500000, 500000).toArray();
+//		long start, end;
+//
+//		for(int j = 0;j < 10;j++) {
+//			Set<Integer> is = new HashSet<>();
+//			for (int i = 0; i < 1000000; i++) {
+//				is.add(rnd[i]);
+//			}
+//		}
+//		start = System.currentTimeMillis();
+//		for(int j = 0;j < 10;j++) {
+//			Set<Integer> is = new HashSet<>();
+//			for (int i = 0; i < 1000000; i++) {
+//				is.add(rnd[i]);
+//			}
+//		}
+//		end   = System.currentTimeMillis();
+//		pw.println("HashSet<Integer>: "+(end-start)/10+" msec/(1 new + 1M add)");
+//
+//		for(int j = 0;j < 10;j++) {
+//			Set<Integer> is = new HashSet<>();
+//			for (int i = 0; i < 1000000; i++) {
+//				is.add(rnd[i]);
+//			}
+//			for (int i = 0; i < 1000000; i++) {
+//				is.remove(rnd[i+1000000]);
+//			}
+//		}
+//		start = System.currentTimeMillis();
+//		for(int j = 0;j < 10;j++) {
+//			Set<Integer> is = new HashSet<>();
+//			for (int i = 0; i < 1000000; i++) {
+//				is.add(rnd[i]);
+//			}
+//			for (int i = 0; i < 1000000; i++) {
+//				is.remove(rnd[i+1000000]);
+//			}
+//		}
+//		end   = System.currentTimeMillis();
+//		pw.println("HashSet<Integer>: "+(end-start)/10+" msec/(1 new + 1M add + 1M remove)");
+//
+//		Set<Integer> is = new HashSet<>();
+//		for (int i = 0; i < 1000000; i++) {
+//			is.add(rnd[i]);
+//		}
+//		for(int j = 0;j < 10;j++) {
+//			for (int i = 0; i < 1000000; i++) {
+//				is.contains(rnd[i+1000000]);
+//			}
+//		}
+//		start = System.currentTimeMillis();
+//		for(int j = 0;j < 10;j++) {
+//			for (int i = 0; i < 1000000; i++) {
+//				is.contains(rnd[i+1000000]);
+//			}
+//		}
+//		end   = System.currentTimeMillis();
+//		pw.println("HashSet<Integer>: "+(end-start)/10+" msec/1M contains");
+//
+//		for(int j = 0;j < 10;j++) {
+//			ScatterIntSet ist = new ScatterIntSet();
+//			for (int i = 0; i < 1000000; i++) {
+//				ist.add(rnd[i]);
+//			}
+//		}
+//		start = System.currentTimeMillis();
+//		for(int j = 0;j < 10;j++) {
+//			ScatterIntSet ist = new ScatterIntSet();
+//			for (int i = 0; i < 1000000; i++) {
+//				ist.add(rnd[i]);
+//			}
+//		}
+//		end   = System.currentTimeMillis();
+//		pw.println("IntScatterSet : "+(end-start)/10+" msec/(1 new + 1M add)");
+//
+//		for(int j = 0;j < 10;j++) {
+//			ScatterIntSet ist = new ScatterIntSet();
+//			for (int i = 0; i < 1000000; i++) {
+//				ist.add(rnd[i]);
+//			}
+//			for (int i = 0; i < 1000000; i++) {
+//				ist.remove(rnd[i+1000000]);
+//			}
+//		}
+//		start = System.currentTimeMillis();
+//		for(int j = 0;j < 10;j++) {
+//			ScatterIntSet ist = new ScatterIntSet();
+//			for (int i = 0; i < 1000000; i++) {
+//				ist.add(rnd[i]);
+//			}
+//			for (int i = 0; i < 1000000; i++) {
+//				ist.remove(rnd[i+1000000]);
+//			}
+//		}
+//		end   = System.currentTimeMillis();
+//		pw.println("IntScatterSet: "+(end-start)/10+" msec/(1 new + 1M add + 1M remove)");
+//
+//		ScatterIntSet ist = new ScatterIntSet();
+//		for (int i = 0; i < 1000000; i++) {
+//			ist.add(rnd[i]);
+//		}
+//		for(int j = 0;j < 10;j++) {
+//			for (int i = 0; i < 1000000; i++) {
+//				ist.contains(rnd[i+1000000]);
+//			}
+//		}
+//		start = System.currentTimeMillis();
+//		for(int j = 0;j < 10;j++) {
+//			for (int i = 0; i < 1000000; i++) {
+//				ist.contains(rnd[i+1000000]);
+//			}
+//		}
+//		end   = System.currentTimeMillis();
+//		pw.println("IntScatterSet : "+(end-start)/10+" msec/1M contains");
+//
+//		pw.flush();
+//		pw.close();
+//	}
 
 	private void addSome(Set<Integer> oracle, IntSet testee) {
 		Random random = new Random(1145141919810L);
