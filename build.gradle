@@ -4,6 +4,25 @@ apply plugin: 'eclipse'
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
+ext {
+    targetDir = "target"
+}
+
+buildDir = targetDir
+
+sourceSets {
+  main {
+    java {
+      srcDir 'src/main/java'
+    }
+  }
+  test {
+    java {
+      srcDir 'src/test/java'
+    }
+  }
+}
+
 repositories {
   mavenCentral()
 }
