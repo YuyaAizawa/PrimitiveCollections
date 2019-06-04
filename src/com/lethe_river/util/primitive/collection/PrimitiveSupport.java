@@ -1,6 +1,9 @@
 package com.lethe_river.util.primitive.collection;
 
 import java.lang.reflect.Array;
+import java.util.AbstractCollection;
+import java.util.AbstractList;
+import java.util.AbstractSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -659,7 +662,7 @@ final class PrimitiveSupport {
 
 	}
 
-	private static class BoxedIntCollection implements Collection<Integer> {
+	private static class BoxedIntCollection extends AbstractCollection<Integer> {
 		final IntCollection original;
 
 		BoxedIntCollection(IntCollection original) {
@@ -758,7 +761,7 @@ final class PrimitiveSupport {
 		}
 	}
 
-	private static class BoxedIntList implements List<Integer> {
+	private static class BoxedIntList extends AbstractList<Integer> {
 		private final IntList original;
 
 		BoxedIntList(IntList original) {
@@ -937,7 +940,7 @@ final class PrimitiveSupport {
 		}
 	}
 
-	private static class BoxedIntSet implements Set<Integer> {
+	private static class BoxedIntSet extends AbstractSet<Integer> {
 		private final IntSet original;
 
 		BoxedIntSet(IntSet original) {
@@ -1076,7 +1079,7 @@ final class PrimitiveSupport {
 		}
 	}
 
-	private static class BoxedLongCollection implements Collection<Long> {
+	private static class BoxedLongCollection extends AbstractCollection<Long> {
 		final LongCollection original;
 
 		BoxedLongCollection(LongCollection original) {
@@ -1175,7 +1178,7 @@ final class PrimitiveSupport {
 		}
 	}
 
-	private static class BoxedLongSet implements Set<Long> {
+	private static class BoxedLongSet extends AbstractSet<Long> {
 		private final LongSet original;
 
 		BoxedLongSet(LongSet original) {
@@ -1314,7 +1317,7 @@ final class PrimitiveSupport {
 		}
 	}
 
-	private static class BoxedByteCollection implements Collection<Byte> {
+	private static class BoxedByteCollection extends AbstractCollection<Byte> {
 		final ByteCollection original;
 
 		BoxedByteCollection(ByteCollection original) {
@@ -1413,7 +1416,7 @@ final class PrimitiveSupport {
 		}
 	}
 
-	private static class BoxedByteList implements List<Byte> {
+	private static class BoxedByteList extends AbstractList<Byte> {
 		private final ByteList original;
 
 		BoxedByteList(ByteList original) {
@@ -1588,7 +1591,7 @@ final class PrimitiveSupport {
 		}
 	}
 
-	private static class BoxedByteSet implements Set<Byte> {
+	private static class BoxedByteSet extends AbstractSet<Byte> {
 		private final ByteSet original;
 
 		BoxedByteSet(ByteSet original) {
@@ -1727,7 +1730,7 @@ final class PrimitiveSupport {
 
 	}
 
-	private static class BoxedCharCollection implements Collection<Character> {
+	private static class BoxedCharCollection extends AbstractCollection<Character> {
 		final CharCollection original;
 
 		BoxedCharCollection(CharCollection original) {
@@ -1826,7 +1829,7 @@ final class PrimitiveSupport {
 		}
 	}
 
-	private static class BoxedCharSet implements Set<Character> {
+	private static class BoxedCharSet extends AbstractSet<Character> {
 		private final CharSet original;
 
 		BoxedCharSet(CharSet original) {
